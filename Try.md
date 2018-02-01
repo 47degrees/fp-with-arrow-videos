@@ -48,10 +48,10 @@ data class Success<out A>(val value: A) : Try<A>()
 
 # Try :: Success
 
-If the computation results in an exception __Try__ will
-be an instances of `Failure`
+If the computation completes __Try__ will
+be an instance of `Success`
 
-```kotlin, [.highlight: 2]
+```kotlin, [.highlight: 3]
 sealed class Try<out A>
 data class Failure<out A>(val exception: Throwable) : Try<A>()
 data class Success<out A>(val value: A) : Try<A>()
@@ -72,7 +72,7 @@ val result: Try<Int> = Try { 1 }
 
 # Try :: invoke(() -> A)
 
-If computing __`Try { computation() }`__ fails it's represented as a `Failure`
+If computing `Try { computation() }` fails it's represented as a `Failure`
 
 ```kotlin
 val result: Try<Int> = Try { throw RuntimeException("BOOM!") }
@@ -273,7 +273,7 @@ Try.monadError().bindingCatch {
 
 __bindingCatch__ captures all thrown exceptions and converts them to __Failure__
 
-```kotlin, [.highlight: 2, 6, 9]
+```kotlin, [.highlight: 4, 7, 10]
 val result1: Try<Int> = Try { 1 }
 val result2: Try<Int> = Try { 1 }
 
