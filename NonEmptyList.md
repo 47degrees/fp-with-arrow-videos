@@ -123,11 +123,11 @@ nelOne.flatMap { one ->
 Λrrow allows imperative style comprehensions to make computing over NonEmptyList values easy.
 
 ```kotlin
-val nelOne: Option<Int> = Option(1)
-val nelTwo: Option<Int> = Option(2)
-val nelThree: Option<Int> = Option(3)
+val nelOne: NonEmptyList<Int> = NonEmptyList.of(1)
+val nelTwo: NonEmptyList<Int> = NonEmptyList.of(2)
+val nelThree: NonEmptyList<Int> = NonEmptyList.of(3)
 
-Option.monad().binding {
+NonEmptyList.monad().binding {
     val one = nelOne.bind()
     val two = nelTwo.bind()
     val three = nelThree.bind()
@@ -148,7 +148,7 @@ NonEmptyList.monad().binding {
     val y = NonEmptyList.of(1, 2, 3).bind()
     yields(x + y)
 }.ev()
-// NonEmptyList(6)
+// NonEmptyList(all=[2, 3, 4, 3, 4, 5, 4, 5, 6])
 ```
 
 ---
@@ -176,11 +176,11 @@ NonEmptyList.applicative().map(nelId, nelName, nelYear, { (id, name, year) ->
 
 ---
 
-# Option :: Conclusion
+# NonEmptyList :: Conclusion
 
 - NonEmptyList is __used to model list that guarantee at least one element__ 
 - We can easily construct values of `NonEmptyList` with `NonEmptyList.of`
-- __foldLeft__, __map__, __flatMap__ and others are used to compute over the internal contents of an Option value.
+- __foldLeft__, __map__, __flatMap__ and others are used to compute over the internal contents of an NonEmptyList value.
 - __NonEmptyList.monad().binding { ... } Comprehensions__ can be __used to imperatively compute__ over multiple NonEmptyList values in sequence.
 - __NonEmptyList.applicative().map { ... }__ can be used to compute over multiple NonEmptyList values preserving type information and __abstracting over arity__ with `map`
 
