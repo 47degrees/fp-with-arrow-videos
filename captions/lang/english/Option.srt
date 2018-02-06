@@ -1,0 +1,410 @@
+﻿1
+00:00:00,888 --> 00:00:04,397
+Welcome to the series of videos about functional programming in Kotlin with Arrow
+
+2
+00:00:04,768 --> 00:00:06,680
+Arrow is a library pack with datatypes
+
+3
+00:00:06,876 --> 00:00:10,186
+and typeclasses that empower pure functional programming in Kotlin
+
+4
+00:00:10,579 --> 00:00:13,365
+In this first video we're gonna talk about the `Option` datatype
+
+5
+00:00:13,396 --> 00:00:20,793
+[Music]
+
+6
+00:00:21,379 --> 00:00:25,109
+`Option` is a datatype in Arrow that we used to model the absence of a value
+
+7
+00:00:26,703 --> 00:00:30,274
+In Arrow most datatypes is model as Algebraic Data Types (ADT)
+
+8
+00:00:30,681 --> 00:00:33,558
+This in Kotlin is represented through seal hierarchies
+
+9
+00:00:34,065 --> 00:00:37,617
+We can see here, that `Option` can be either `None` or `Some`
+
+10
+00:00:39,003 --> 00:00:41,464
+If the `Option` has no value
+
+11
+00:00:41,505 --> 00:00:44,759
+then it's represented as a singleton value `None`
+
+12
+00:00:44,983 --> 00:00:49,911
+Whereas if the `Option` has a value inside, it's represented with the case `Some`
+
+13
+00:00:50,799 --> 00:00:52,911
+We can construct optional values
+
+14
+00:00:52,935 --> 00:00:56,584
+by simply using the `Option` constructor and apply it to the value
+
+15
+00:00:56,654 --> 00:00:59,848
+In this case the value one (1) is lifted into the optional context
+
+16
+00:00:59,965 --> 00:01:02,515
+so the resulting type is an `Option` of `Int`
+
+17
+00:01:02,991 --> 00:01:04,171
+In the same way,
+
+18
+00:01:04,338 --> 00:01:07,403
+if we want to represent an absent value, we can use just `None`
+
+19
+00:01:07,602 --> 00:01:08,882
+This is because `None`
+
+20
+00:01:09,045 --> 00:01:10,831
+it's encoded so that it uses `Nothing`,
+
+21
+00:01:10,856 --> 00:01:13,672
+a bottom type that can be adapted to any type receiver
+
+22
+00:01:14,066 --> 00:01:16,715
+`Option` integrates with nullable types from Kotlin
+
+23
+00:01:16,854 --> 00:01:18,302
+It’s easy to lift a value into the optional context
+
+24
+00:01:18,327 --> 00:01:21,431
+by simply invoking the ‘fromNullable()’ factory
+
+25
+00:01:23,076 --> 00:01:23,909
+In the same way,
+
+26
+00:01:23,959 --> 00:01:26,439
+if we have and already optinal value in it's context,
+
+27
+00:01:26,490 --> 00:01:28,524
+we can turn into a nullable type
+
+28
+00:01:28,613 --> 00:01:30,557
+by invoking the method 'orNull()'
+
+29
+00:01:33,045 --> 00:01:34,722
+In addition to `Option` datatype,
+
+30
+00:01:34,798 --> 00:01:38,121
+Arrow provides syntax extensions in a different module called
+
+31
+00:01:38,147 --> 00:01:39,496
+'arrow.syntax.*'
+
+32
+00:01:39,837 --> 00:01:42,327
+This module allows us to leave values such as
+
+33
+00:01:42,464 --> 00:01:46,214
+an `Int`, a `String` or anything we want to an `Option`
+
+34
+00:01:46,286 --> 00:01:51,127
+via `Some` and also to provide `None` values
+
+35
+00:01:51,226 --> 00:01:53,091
+that match the type that we wanna infer
+
+36
+00:01:54,446 --> 00:01:56,732
+In addition to lifting other values
+
+37
+00:01:56,797 --> 00:01:59,011
+and nullable types values to optional context,
+
+38
+00:01:59,507 --> 00:02:01,975
+`Option` also comes with functions and methods
+
+39
+00:02:02,110 --> 00:02:04,110
+that helps us compute over that context
+
+40
+00:02:04,298 --> 00:02:07,163
+One of the facilities we can use when folding over and `Option`
+
+41
+00:02:07,227 --> 00:02:08,791
+is Kotlin 'when' expressions
+
+42
+00:02:09,138 --> 00:02:12,304
+We can simply use 'when'
+to match an optional
+
+43
+00:02:12,460 --> 00:02:15,745
+and then contemplate both cases `None` or `Some`
+
+44
+00:02:17,719 --> 00:02:21,068
+When we fold over an `Option`, we are contemplating both cases
+
+45
+00:02:21,157 --> 00:02:24,062
+This is similar to the previous pattern matching example,
+
+46
+00:02:24,285 --> 00:02:26,412
+but in this case we're providing two functions
+
+47
+00:02:27,442 --> 00:02:30,181
+The first function contemplates the `None` case
+
+48
+00:02:30,610 --> 00:02:34,186
+in this one we tell what will happen or what value to return
+
+49
+00:02:34,400 --> 00:02:36,203
+whenever the `Option` is a `None`
+
+50
+00:02:36,813 --> 00:02:39,710
+In the second case, we contemplate the `Some` case
+
+51
+00:02:39,953 --> 00:02:43,159
+In this case, we can inspect the value inside the `Option`
+
+52
+00:02:43,219 --> 00:02:45,719
+and apply any transformation to it that we wish
+
+53
+00:02:46,900 --> 00:02:49,615
+'getOrElse()' is a specialization of 'fold()'
+
+54
+00:02:49,720 --> 00:02:52,291
+where we simply state what it will return
+
+55
+00:02:52,409 --> 00:02:53,893
+if the `Option` was a `None`
+
+56
+00:02:54,330 --> 00:02:55,417
+We can see this as,
+
+57
+00:02:55,442 --> 00:02:58,355
+providing just the default value should the `Option` be empty
+
+58
+00:02:59,924 --> 00:03:03,020
+'map()' allows us to transform the inner value of an `Option`
+
+59
+00:03:03,174 --> 00:03:06,031
+from one value to another, even change in types
+
+60
+00:03:06,467 --> 00:03:08,808
+'map()' is only applied in the `Some` case
+
+61
+00:03:09,182 --> 00:03:11,925
+Whenever we have a `None` case the `Option`,
+
+62
+00:03:12,116 --> 00:03:14,934
+'map()' just takes no effect and `None` is returned instead
+
+63
+00:03:16,626 --> 00:03:19,832
+When we have multiple optional values and we want to compute
+
+64
+00:03:19,884 --> 00:03:22,225
+where the possibility that they will be fulfilled,
+
+65
+00:03:22,373 --> 00:03:23,580
+we can use 'flatMap()'
+
+66
+00:03:24,400 --> 00:03:27,313
+'flatMap()' allows us to combine two (2) optional values
+
+67
+00:03:27,391 --> 00:03:29,851
+and with their result produces a new result
+
+68
+00:03:30,350 --> 00:03:32,858
+The problem with multiple 'flatMap()' calls,
+
+69
+00:03:33,052 --> 00:03:35,338
+is that it can become very hard to read
+
+70
+00:03:35,438 --> 00:03:36,811
+once they're deeply nested
+
+71
+00:03:37,126 --> 00:03:40,436
+Arrow provides monad comprehensions to deal with this problem
+
+72
+00:03:42,099 --> 00:03:44,194
+Monad comprehensions like ‘flatMap()’
+
+73
+00:03:44,387 --> 00:03:46,203
+let us comprehend over the
+
+74
+00:03:46,228 --> 00:03:48,078
+potential value inside the `Option`,
+
+75
+00:03:48,270 --> 00:03:50,730
+but they do so in a very imperative style,
+
+76
+00:03:50,884 --> 00:03:54,401
+where you can have on instruction at a time, in sequence,
+
+77
+00:03:54,433 --> 00:03:55,831
+stating what is happening
+
+78
+00:03:56,951 --> 00:04:01,063
+Monad comprehensions are implemented in Arrow at top coroutines
+
+79
+00:04:01,359 --> 00:04:03,225
+Here the function ‘bind()’
+
+80
+00:04:03,273 --> 00:04:06,615
+binds in to the left value once ‘flatMap()’ completes
+
+81
+00:04:07,220 --> 00:04:09,744
+This only happens if the `Option` is a `Some`
+
+82
+00:04:10,221 --> 00:04:12,340
+In the case that the `Option` is empty
+
+83
+00:04:12,518 --> 00:04:16,376
+the for comprehension will
+short-circuit, returning `None`
+
+84
+00:04:18,482 --> 00:04:22,643
+In the same way Monad comprehension are to compute sequentially,
+
+85
+00:04:22,682 --> 00:04:26,056
+whenever we have independent operations that we can compute
+
+86
+00:04:26,081 --> 00:04:28,511
+in parallel or independently,
+
+87
+00:04:28,617 --> 00:04:30,403
+we use the applicative builder
+
+88
+00:04:30,949 --> 00:04:33,632
+The applicative builder has two main features
+
+89
+00:04:33,757 --> 00:04:36,598
+The first one, it preserves type information,
+
+90
+00:04:36,623 --> 00:04:40,131
+regardless of the arity of the methods or the number of `Options` we have
+
+91
+00:04:40,515 --> 00:04:43,316
+In the second one, we had a callback
+
+92
+00:04:43,401 --> 00:04:45,885
+when all the values are completed and resolved,
+
+93
+00:04:46,140 --> 00:04:48,402
+only if all the values are a `Some`
+
+94
+00:04:49,275 --> 00:04:51,945
+In the case that one of the values is a `None`,
+
+95
+00:04:52,041 --> 00:04:55,549
+the 'map()' never adds and `None` is returned instead
+
+96
+00:04:56,670 --> 00:04:58,654
+In this video we’ve learn about `Option`
+
+97
+00:04:58,697 --> 00:05:02,031
+and differents methods and functions we can use to transform it’s values
+
+98
+00:05:02,132 --> 00:05:04,148
+and to compute over the optional context
+
+99
+00:05:04,811 --> 00:05:08,423
+In the next series of videos, we’ll learn about more datatypes, typeclasses and
+
+100
+00:05:08,614 --> 00:05:11,487
+the unified programming model that arrow proposes
+
+101
+00:05:11,605 --> 00:05:12,533
+Thanks for watching
+
+102
+00:05:13,144 --> 00:05:24,826
+[Music]
+
