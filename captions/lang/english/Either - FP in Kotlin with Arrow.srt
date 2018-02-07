@@ -1,0 +1,220 @@
+﻿1
+00:00:00,909 --> 00:00:08,039
+Welcome to the series of videos about functional programming in Kotlin with Arrow. Arrow is a library that is packed with data
+
+2
+00:00:08,039 --> 00:00:13,678
+types and type classes bringing typed FP to Kotlin. In this video, we're going to learn about the either data
+
+3
+00:00:13,679 --> 00:00:15,679
+type and what it's used for.
+
+4
+00:00:23,070 --> 00:00:28,189
+Either is a data typing error that we used to model when a function may return more than one value
+
+5
+00:00:28,860 --> 00:00:30,860
+Can be either one or the other.
+
+6
+00:00:33,090 --> 00:00:40,040
+Either is frequently modeled as an algebraic data type in the same way we saw in Option, Either has many cases.
+
+7
+00:00:40,590 --> 00:00:43,639
+Algebraic data types are modeling Kotlin with sealed classes.
+
+8
+00:00:45,570 --> 00:00:49,009
+Either has two possible values either a Left or a Right.
+
+9
+00:00:49,680 --> 00:00:56,659
+In the left side, we usually encode the exceptional case, in the right side we encode the happy path.
+
+10
+00:00:57,030 --> 00:01:03,710
+This is important because Either is right biased this means that most of the functions like map, filter, and flatMap
+
+11
+00:01:03,780 --> 00:01:05,780
+will operate over the right case.
+
+12
+00:01:06,810 --> 00:01:09,140
+We have two main constructors to work with Either.
+
+13
+00:01:09,510 --> 00:01:14,959
+The Right constructor allows us to bring values into the context of Either placing them on the right.
+
+14
+00:01:16,080 --> 00:01:18,798
+Whereas, the Left constructor places them on the left.
+
+15
+00:01:19,439 --> 00:01:21,000
+As we can see here,
+
+16
+00:01:21,000 --> 00:01:25,909
+we are modeling unknown errors without using exceptions and putting that on the left side
+
+17
+00:01:26,250 --> 00:01:30,739
+because our computation is mostly going to happen on the end, which is the right side.
+
+18
+00:01:32,039 --> 00:01:38,779
+Arrow provides a extension syntax for Either. We can easily lift values to the right and left case,
+
+19
+00:01:39,390 --> 00:01:43,309
+provided the receiver declares a type, in which we know what the other case is.
+
+20
+00:01:44,249 --> 00:01:50,839
+We can transform the inner contents of Either with several built-in functions such as fold, getOrElse, map, and flatmap.
+
+21
+00:01:51,509 --> 00:01:53,509
+This might be familiar to you at this time
+
+22
+00:01:53,999 --> 00:02:00,318
+because we saw the same functions in Option. This is part of Arrow's unified model of programming.
+
+23
+00:02:00,869 --> 00:02:05,538
+We take all the functional combinators and try to apply them as many data types as possible,
+
+24
+00:02:05,639 --> 00:02:07,789
+so that all of them share the same API.
+
+25
+00:02:09,258 --> 00:02:12,847
+We can extract either inner values by using Kotlin's when expressions.
+
+26
+00:02:13,610 --> 00:02:19,179
+In this case, you can see how the result value will be of type Either<KnownError, Int>
+
+27
+00:02:19,760 --> 00:02:26,289
+can be easily placed on our one expressions, and then we can branch out logic based on the left and right cases
+
+28
+00:02:27,230 --> 00:02:33,640
+An easier way to deal with this case, is using fold. Fold allows us to pass two functions. The
+
+29
+00:02:34,640 --> 00:02:37,000
+first function addresses the left case.
+
+30
+00:02:37,849 --> 00:02:41,469
+Here we are saying that if we find a KnownError, we should return zero.
+
+31
+00:02:42,080 --> 00:02:48,940
+The second argument is a function that addresses the right case. Here we have the chance to transform the inner contents of right. A
+
+32
+00:02:50,060 --> 00:02:53,679
+concretion to the previous fold is getOrElse. In getOrElse,
+
+33
+00:02:53,680 --> 00:03:01,239
+we're just simply providing the function that addresses the left case. Here we're saying that if it's a KnownError, we should return 0 instead.
+
+34
+00:03:02,510 --> 00:03:05,500
+Map allows us to transform the values inside an Either.
+
+35
+00:03:05,810 --> 00:03:10,839
+It operates only on the right case, and that's why we say this Either is right biased.
+
+36
+00:03:11,989 --> 00:03:19,389
+If we were mapping and there was a left, in that case the transformation is never applied and the left is left untouched.
+
+37
+00:03:20,299 --> 00:03:22,509
+If we have multiple Either values
+
+38
+00:03:22,510 --> 00:03:30,010
+and we want to compute sequentially over the right case, we use flatMap. flatMap in the same way as map is right biased.
+
+39
+00:03:31,370 --> 00:03:35,679
+Instead of dealing with multiple nested flatMaps, an easier solution is to use
+
+40
+00:03:36,200 --> 00:03:38,200
+errors built in monad comprehensions.
+
+41
+00:03:38,690 --> 00:03:44,709
+The Either monad allows us to bind over Either results and then bind their results to the right case.
+
+42
+00:03:45,410 --> 00:03:53,049
+Once we have all of the values unbound, we can then add them up or do whatever transformation we wish in an imperative fashion.
+
+43
+00:03:54,630 --> 00:03:58,430
+Bind is a suspended function in the Kotlin coroutine system.
+
+44
+00:03:58,710 --> 00:04:03,980
+When we invoke bind, we delegate the chain call to flatMap. In this way, we can avoid
+
+45
+00:04:04,170 --> 00:04:08,750
+nested flatMap chains and imperatively compute over the results of Either.
+
+46
+00:04:11,100 --> 00:04:16,640
+If we bind over a left value the computation will short-circuit yielding the left case.
+
+47
+00:04:17,910 --> 00:04:21,679
+We can use the applicative builder to compute our different values of Either
+
+48
+00:04:21,680 --> 00:04:27,830
+That are independent from each other. With the applicative builder we can map or convert into tuples, a set of operations
+
+49
+00:04:28,110 --> 00:04:31,249
+preserving the type information and preserving their id.
+
+50
+00:04:32,640 --> 00:04:40,009
+As in with monad comprehensions if we ever find a left value, then we will short-circuit and then return the Left KnownError.
+
+51
+00:04:40,860 --> 00:04:47,509
+In this video, we learned about Either. In the same way as Option, Either serves a lot of the functions and different
+
+52
+00:04:47,850 --> 00:04:50,989
+functionality that Option did - fold, map, flatMap.
+
+53
+00:04:51,690 --> 00:04:59,660
+Arrow proposes a unified programming model for all data types where they all share the functional combinators that are usually expressed in type classes.
+
+54
+00:05:00,060 --> 00:05:03,020
+We'll learn more about those in the next series. Thanks for watching.
+
+55
+00:05:05,580 --> 00:05:07,580
+ 
+
