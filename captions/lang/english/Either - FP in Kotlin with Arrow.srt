@@ -20,15 +20,15 @@ Can be either one or the other.
 
 6
 00:00:33,090 --> 00:00:40,040
-Either is frequently modeled as an algebraic data type in the same way we saw in option, Either has many cases.
+Either is frequently modeled as an algebraic data type in the same way we saw in Option, Either has many cases.
 
 7
 00:00:40,590 --> 00:00:43,639
-Algebraic data types are modeling Kotlin with CL classes.
+Algebraic data types are modeling Kotlin with sealed classes.
 
 8
 00:00:45,570 --> 00:00:49,009
-Either has two possible values either a left or a right.
+Either has two possible values either a Left or a Right.
 
 9
 00:00:49,680 --> 00:00:56,659
@@ -36,7 +36,7 @@ In the left side, we usually encode the exceptional case, in the right side we e
 
 10
 00:00:57,030 --> 00:01:03,710
-This is important because Either is right biased this means that most of the functions like map, filter, and flat map
+This is important because Either is right biased this means that most of the functions like map, filter, and flatMap
 
 11
 00:01:03,780 --> 00:01:05,780
@@ -48,11 +48,11 @@ We have two main constructors to work with Either.
 
 13
 00:01:09,510 --> 00:01:14,959
-The right constructor allows us to bring values into the context of Either placing them on the right.
+The Right constructor allows us to bring values into the context of Either placing them on the right.
 
 14
 00:01:16,080 --> 00:01:18,798
-Whereas, the left constructor places them on the left.
+Whereas, the Left constructor places them on the left.
 
 15
 00:01:19,439 --> 00:01:21,000
@@ -60,15 +60,15 @@ As we can see here,
 
 16
 00:01:21,000 --> 00:01:25,909
-we are modeling unknown error without using exceptions and putting that on the left side
+we are modeling unknown errors without using exceptions and putting that on the left side
 
 17
 00:01:26,250 --> 00:01:30,739
-because our competition is mostly going to happen on the end, which is the right side.
+because our computation is mostly going to happen on the end, which is the right side.
 
 18
 00:01:32,039 --> 00:01:38,779
-Arrow provides a distinction syntax for Either. We can easily lift values to the right and left case,
+Arrow provides a extension syntax for Either. We can easily lift values to the right and left case,
 
 19
 00:01:39,390 --> 00:01:43,309
@@ -76,7 +76,7 @@ provided the receiver declares a type, in which we know what the other case is.
 
 20
 00:01:44,249 --> 00:01:50,839
-We can transform the inner contents of Either with several built-in functions such as full, getOrElse, map, and flatmap.
+We can transform the inner contents of Either with several built-in functions such as fold, getOrElse, map, and flatmap.
 
 21
 00:01:51,509 --> 00:01:53,509
@@ -88,7 +88,7 @@ because we saw the same functions in Option. This is part of Arrow's unified mod
 
 23
 00:02:00,869 --> 00:02:05,538
-We take all the functional common errors and try to apply them as many data types as possible,
+We take all the functional combinators and try to apply them as many data types as possible,
 
 24
 00:02:05,639 --> 00:02:07,789
@@ -100,7 +100,7 @@ We can extract either inner values by using Kotlin's when expressions.
 
 26
 00:02:13,610 --> 00:02:19,179
-In this case, you can see how the result value will be enough type Either<KnownError, Int>
+In this case, you can see how the result value will be of type Either<KnownError, Int>
 
 27
 00:02:19,760 --> 00:02:26,289
@@ -124,7 +124,7 @@ The second argument is a function that addresses the right case. Here we have th
 
 32
 00:02:50,060 --> 00:02:53,679
-conclusion to the previous fold is getOrElse. In getOrElse,
+concretion to the previous fold is getOrElse. In getOrElse,
 
 33
 00:02:53,680 --> 00:03:01,239
@@ -156,7 +156,7 @@ Instead of dealing with multiple nested flatMaps, an easier solution is to use
 
 40
 00:03:36,200 --> 00:03:38,200
-errors built in monad comprehension.
+errors built in monad comprehensions.
 
 41
 00:03:38,690 --> 00:03:44,709
