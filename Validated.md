@@ -47,7 +47,7 @@ data class Valid<out A>(val a: A) : Validated<Nothing, A>()
 
 # Validated :: Valid
 
-If the value is what's expected AKA a happy path, it's represented in the __Valid__ case
+If the value is what's expected, AKA a happy path, it's represented in the __Valid__ case
 
 ```kotlin, [.highlight: 3]
 sealed class Validated<out E, out A>
