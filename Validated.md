@@ -102,6 +102,22 @@ val result: Validated<KnownError, Int> = 1.valid()
 
 ---
 
+# Validated :: ValidatedNel
+
+As they fit together nicely, Λrrow offers a way to use together __Validated__ and __NonEmptyList__ data types.
+
+```
+type ValidatedNel<E, A> = Validated<NonEmptyList<E>, A>
+
+// Functions for creating Valid and Invalid values
+fun <E, A> invalidNel(e: E): ValidatedNel<E, A> = Invalid(NonEmptyList(e, listOf()))
+fun <E, A> validNel(a: A): ValidatedNel<E, A> = Valid(a)
+
+```
+
+
+---
+
 # Validated :: Transformations
 
 We can transform __Validated__ values through several built in functions
@@ -124,7 +140,7 @@ val result: Validated<KnownError, Int> = Valid(1)
 
 when(result) {
     is Invalid -> 0
-    is Valid -> result.b
+    is Valid -> result.a
 }
 // 1
 ```
@@ -230,6 +246,53 @@ result.map { it + 1 }
 
 ---
 
+# Validated :: toValidatedNel
+
+We can directly transform a __Validated__ into a __ValidatedNel__ through __toValidatedNel__
+
+```kotlin
+Invalid(13).toValidatedNel()
+
+// Invalid(NonEmptyList(all=[13]))
+```
+
+---
+
+# Validated :: orElse
+
+When in the need to discriminate between different __Validated__ values we can use __orElse__
+
+```kotlin
+
+Valid(13).orElse { fail("None should not be called") }
+// Valid(13)
+Invalid(13).orElse { Valid("defaultValue") }
+// Valid("defaultValue")
+Invalid(13).orElse { Invalid("defaultValue") }
+// Invalid("defaultValue")
+```
+
+---
+
+# Validated :: findValid
+
+__findValid__ returns the first __Valid__ value or combines __Invalid__ values otherwise
+
+We need the help of a semigroup instance, to define the way the __Invalid__ values will be combined.
+
+```kotlin
+// this is like semigroup<String>()
+val plusStringSemigroup: Semigroup<String> = object : Semigroup<String> {
+        override fun combine(a: String, b: String): String = "$a, $b"
+    }
+
+Invalid("Invalid").findValid(plusIntSemigroup, { Valid("Valid") })
+// Valid("Valid")
+Invalid("InvalidA").findValid(plusStringSemigroup, { Invalid("InvalidB") })
+// Invalid("InvalidA, InvalidB")
+```
+
+---
 
 # Validated :: Applicative Builder
 
@@ -254,7 +317,7 @@ Validated.applicative<KnownError>().map(vId, vName, vAge, { (id, name, age) ->
 
 # Validated :: Applicative Builder
 
-If a value turns out to be __Invalid__ the computation doesn't short-circuit, but instead combines the possible
+If a value turns out to be __Invalid__ the computation doesn't short-circuit, but instead combines the possible invalid values encountered.
 
 ```kotlin, [.highlight: 6, 12]
 object KnownError
@@ -278,7 +341,7 @@ Validated.applicative<KnownError>().map(vId, vName, vAge, { (id, name, age) ->
 - Validated is __used to assure computation that throw exceptions__
 - We can easily construct values of `Validated` with `Invalid(1)`, `Valid(1)`, `1.invalid()` or `1.valid()`.
 - __fold__, __map__ and others are used to compute over the internal contents of a Validated computation.
-- __Validated.applicative<E>().map { ... }__ can be used to compute over multiple Optional values preserving type information and __abstracting over arity__ with `map`
+- __Validated.applicative<E>().map { ... }__ can be used to compute over multiple validated values preserving type information and __abstracting over arity__ with `map`
 ---
 
 # Validated :: Conclusion
