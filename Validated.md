@@ -338,7 +338,7 @@ Validated.applicative<KnownError>().map(vId, vName, vAge, { (id, name, age) ->
 
 # Validated :: Conclusion
 
-- Validated is __used to assure computation that throw exceptions__
+- Validated is __used to model a value that we can consider valid or invalid__ under our context
 - We can easily construct values of `Validated` with `Invalid(1)`, `Valid(1)`, `1.invalid()` or `1.valid()`.
 - __fold__, __map__ and others are used to compute over the internal contents of a Validated computation.
 - __Validated.applicative<E>().map { ... }__ can be used to compute over multiple validated values preserving type information and __abstracting over arity__ with `map`
