@@ -1,0 +1,136 @@
+﻿1
+00:00:00,960 --> 00:00:05,600
+Welcome to the series of videos about functional programming in Kotlin with Arrow. In this video,
+
+2
+00:00:05,600 --> 00:00:10,670
+we're going to learn about the Try data type. Try is a data type that we use to model
+
+3
+00:00:11,220 --> 00:00:13,249
+computations that may fail throwing exceptions.
+
+4
+00:00:22,660 --> 00:00:26,669
+Try is a data type we use to model computations that fail with an exception.
+
+5
+00:00:27,820 --> 00:00:33,570
+Try is modeled in the same way as Option and Either as an Algebraic Data Type. In the case of Try,
+
+6
+00:00:33,570 --> 00:00:35,570
+we have two cases - Failure and Success.
+
+7
+00:00:37,030 --> 00:00:42,809
+If the computation fails with an exception, Try will capture the exception and place it in a Failure.
+
+8
+00:00:44,769 --> 00:00:50,759
+If the computation completes, Try will place the value resulting from the computation in a Success.
+
+9
+00:00:51,850 --> 00:00:57,329
+If the computation fails with an exception, Try will capture it and represent it as a Failure.
+
+10
+00:00:58,840 --> 00:01:06,660
+Try comes with a lot of combinators and methods that allows us to compute and transform the internal values assuming the computation succeeded.
+
+11
+00:01:07,180 --> 00:01:12,419
+We can use Kotlin's when expressions to contemplate all cases in which a Try may file itself,
+
+12
+00:01:12,970 --> 00:01:14,970
+whether it's a Failure or a Success.
+
+13
+00:01:16,000 --> 00:01:22,229
+An easier way to handle the cases of Try is using a fold. In the case of fold, we have two functions.
+
+14
+00:01:22,900 --> 00:01:24,780
+The first function contemplates
+
+15
+00:01:24,780 --> 00:01:32,369
+what will happen if the Try was a Failure and had an exception. We can provide an alternative value to return from the fold.
+
+16
+00:01:33,490 --> 00:01:39,869
+If the Try was a Success, the second function will allow us to transform, or do nothing with it, like in this case.
+
+17
+00:01:41,229 --> 00:01:44,669
+Recover is a specialization of fold that acts
+
+18
+00:01:44,979 --> 00:01:51,719
+exclusively in the Failure case. In this case we can see how we can recover from a potential exception provided a default value.
+
+19
+00:01:53,020 --> 00:01:55,740
+With map we act on the happy path.
+
+20
+00:01:57,070 --> 00:02:03,119
+If the Try is a Failure, map will take no action, and the failure will be returned instead.
+
+21
+00:02:05,070 --> 00:02:11,570
+flatMap allows us to combine and compose multiple Try operations in a sequential fashion. In this case,
+
+22
+00:02:12,060 --> 00:02:18,890
+the results of result1 and result2 are combined to produce a new Try in the form of Success.
+
+23
+00:02:20,100 --> 00:02:27,290
+Arrow comes with built-in Monard comprehensions that allow us to compute over Try values in an imperative fashion.
+
+24
+00:02:27,690 --> 00:02:30,020
+Each time bind() is invoked,
+
+25
+00:02:30,330 --> 00:02:33,380
+it delegates to flatMap and it allows a
+
+26
+00:02:33,540 --> 00:02:41,089
+Suspension in the coroutine's context to get the value when flatMap will have been completed. If we bind with a Failure,
+
+27
+00:02:41,550 --> 00:02:45,679
+the computation short-circuits and a Failure is returned instead.
+
+28
+00:02:47,130 --> 00:02:52,850
+bindingCatch is a specialization of comprehensions for Try and for other monadError capable data types
+
+29
+00:02:53,160 --> 00:02:59,179
+that automatically captures all exceptions thrown inside it's context. In this case if an exception is thrown,
+
+30
+00:02:59,850 --> 00:03:01,850
+Try will return a Failure.
+
+31
+00:03:03,810 --> 00:03:07,670
+In this video, we learned about the Try data type. Try is a data
+
+32
+00:03:07,670 --> 00:03:12,678
+type that we use to model computations that may fail throwing exceptions. In the next in this series of videos, we're
+
+33
+00:03:12,679 --> 00:03:14,480
+going to learn about applicative error
+
+34
+00:03:14,850 --> 00:03:19,969
+monadError, and other facilities Arrow provides to handle exceptions. Thanks for watching.
+
