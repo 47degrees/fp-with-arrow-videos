@@ -40,7 +40,7 @@ Try comes with a lot of combinators and methods that allows us to compute and tr
 
 11
 00:01:07,180 --> 00:01:12,419
-We can use Kotlin's when expressions to contemplate all cases in which a Try may file itself,
+We can use Kotlin's when expressions to contemplate all cases in which a Try may fail itself,
 
 12
 00:01:12,970 --> 00:01:14,970
