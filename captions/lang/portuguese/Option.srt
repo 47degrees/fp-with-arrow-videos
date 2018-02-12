@@ -1,0 +1,375 @@
+﻿1
+00:00:00,888 --> 00:00:04,397
+Bem-vindo a série de vídeos sobre programação funcional em Kotlin com Arrow
+
+2
+00:00:04,768 --> 00:00:07,778
+Arrow é uma biblioteca com ‘datatypes’ e ‘typeclasses’
+
+3
+00:00:07,826 --> 00:00:10,186
+que empoderam a programação funcional em Kotlin
+
+4
+00:00:10,579 --> 00:00:13,365
+Nesse primeiro vídeo, falaremos sobre o ‘datatype’ `Option`
+
+5
+00:00:13,396 --> 00:00:20,793
+[Música]
+
+6
+00:00:21,193 --> 00:00:25,394
+Em Arrow `Option` é um ‘datatype’ usado para modelar a ausência (ou não) de um valor
+
+7
+00:00:26,703 --> 00:00:30,274
+Em Arrow a maioria dos ‘datatypes’ são modelados como tipos algébricos
+
+8
+00:00:30,681 --> 00:00:33,558
+Em Kotlin, isto é representado através das hierarquias seladas (sealed class)
+
+9
+00:00:34,065 --> 00:00:37,617
+Aqui podemos ver que `Option` pode ser tanto `None` como `Some`
+
+10
+00:00:39,003 --> 00:00:44,759
+Se é um`Option` vazio, então é representado como um singleton `None`
+
+11
+00:00:44,983 --> 00:00:49,911
+Entretanto, se o `Option` tiver um valor é representado com o `Some`
+
+12
+00:00:50,799 --> 00:00:52,911
+Podemos construir valores opcionais
+
+13
+00:00:52,935 --> 00:00:56,584
+simplesmente usando o construtor do `Option` e aplicando o valor nele
+
+14
+00:00:56,654 --> 00:00:59,848
+Neste caso o valor um (1) é colocado no contexto opcional,
+
+15
+00:00:59,965 --> 00:01:02,515
+então o tipo resultante é um `Option` de `Int`
+
+16
+00:01:02,991 --> 00:01:04,171
+Da mesma forma,
+
+17
+00:01:04,338 --> 00:01:07,403
+se queremos representar um valor ausente, podemos usar apenas `None`
+
+18
+00:01:07,602 --> 00:01:10,831
+Isso porque `None` é uma forma
+de representar `Nothing`
+
+19
+00:01:10,856 --> 00:01:13,672
+um subtipo que pode ser adaptado para qualquer tipo receptor
+
+20
+00:01:14,066 --> 00:01:16,715
+`Option` se integra com os tipos nulos do Kotlin
+
+21
+00:01:16,854 --> 00:01:18,302
+É fácil colocar um valor no contexto opcional
+
+22
+00:01:18,327 --> 00:01:21,431
+simplesmente invocando o método fábrica ‘fromNullable()’
+
+23
+00:01:23,076 --> 00:01:26,439
+Da mesma forma, se já temos um
+valor opcional em seu contexto,
+
+24
+00:01:26,490 --> 00:01:30,557
+podemos transforma em um tipo anulável
+invocando o método ‘orNull()’
+
+25
+00:01:33,045 --> 00:01:34,722
+Em adição ao ‘datatype’ `Option`,
+
+26
+00:01:34,798 --> 00:01:38,121
+Arrow fornece extensões de sintaxe em um módulo diferente,
+
+27
+00:01:38,147 --> 00:01:39,496
+chamado ‘arrow.syntax.*’
+
+28
+00:01:39,837 --> 00:01:42,327
+Esse módulo permite que usemos qualquer valor como,
+
+29
+00:01:42,464 --> 00:01:46,214
+`Int`, `String` ou quaisquer outros que quisermos como um `Option`
+
+30
+00:01:46,286 --> 00:01:51,127
+por meio do `Some` e também fornece valores `None`
+
+31
+00:01:51,226 --> 00:01:53,091
+que casam com o tipo que queremos inferir.
+
+32
+00:01:54,446 --> 00:01:56,732
+Além de utilizar outros valores e
+
+33
+00:01:56,797 --> 00:01:59,011
+tipos anuláveis no contexto opcional
+
+34
+00:01:59,507 --> 00:02:01,975
+o `Option` também possui funções e métodos
+
+35
+00:02:02,110 --> 00:02:04,110
+que nos ajudam a processar neste contexto
+
+36
+00:02:04,298 --> 00:02:05,811
+As expressões ‘when’ do Kotlin
+
+37
+00:02:05,883 --> 00:02:08,791
+são uma das facilidades ao fazer um ‘fold’ em um `Option`
+
+38
+00:02:09,138 --> 00:02:12,304
+Podemos simplesmente usar o ‘when’ para casar o valor opcional
+
+39
+00:02:12,460 --> 00:02:15,745
+e ambos os casos `None` e `Some`
+
+40
+00:02:17,719 --> 00:02:21,068
+Quando usamos ‘fold()’ em um `Option`, estamos contemplando ambos os casos
+
+41
+00:02:21,157 --> 00:02:24,062
+Isso é similar ao exemplo anterior do pattern matching (casamento de padrão),
+
+42
+00:02:24,285 --> 00:02:26,412
+mas neste caso fornecemos duas funções
+
+43
+00:02:27,442 --> 00:02:30,181
+A primeira função permite dizer o que vai acontecer
+
+44
+00:02:30,610 --> 00:02:36,203
+ou qual valor será retornado sempre que a opção for `None`
+
+45
+00:02:36,813 --> 00:02:39,710
+Na segunda função é contemplado o `Some`
+
+46
+00:02:39,953 --> 00:02:43,159
+Neste caso, o valor é inspecionado dentro do `Option`
+
+47
+00:02:43,219 --> 00:02:45,719
+e uma transformação qualquer pode ser aplicada a ele
+
+48
+00:02:46,900 --> 00:02:49,615
+‘getOrElse()’ é uma derivação do ‘fold()’
+
+49
+00:02:49,720 --> 00:02:52,291
+onde simplesmente dizemos o que será retornado
+
+50
+00:02:52,409 --> 00:02:53,893
+se o `Option` for `None`
+
+51
+00:02:54,330 --> 00:02:55,417
+Podemos entender isto como
+
+52
+00:02:55,442 --> 00:02:58,550
+se estivéssemos fornecendo um valor padrão caso o `Option` seja vazio
+
+53
+00:02:59,924 --> 00:03:03,020
+‘map()’ nos permite transformar o valor interno do `Option`
+
+54
+00:03:03,174 --> 00:03:06,031
+para qualquer outro valor, mesmo que haja mudança no tipo
+
+55
+00:03:06,467 --> 00:03:08,808
+O ‘map()’ é aplicado apenas no caso do `Some`
+
+56
+00:03:09,182 --> 00:03:11,925
+Sempre que o `Option` for um `None`,
+
+57
+00:03:12,116 --> 00:03:14,934
+o ‘map()’ não surtirá efeito e será retornado `None`
+
+58
+00:03:16,626 --> 00:03:19,832
+Quando temos múltiplos valores opcionais e queremos processar
+
+59
+00:03:19,884 --> 00:03:22,225
+sobre a possibilidade de serem ou não preenchidos,
+
+60
+00:03:22,373 --> 00:03:23,580
+podemos usar ‘flatMap()’
+
+61
+00:03:24,400 --> 00:03:27,313
+O ‘flatMap()’ nos permite combinar dois (2) valores opcionais
+
+62
+00:03:27,391 --> 00:03:29,851
+e produzir um novo resultado
+
+63
+00:03:30,350 --> 00:03:32,858
+O problema com múltiplas chamadas de ‘flatMap()’
+
+64
+00:03:33,052 --> 00:03:36,811
+é que pode se tornar ilegível conforme o aninhamento aumenta
+
+65
+00:03:37,126 --> 00:03:40,436
+O Arrow fornece ‘monad comprehensions’ para lidar com esse problema
+
+66
+00:03:42,099 --> 00:03:44,194
+As ‘monad comprehensions’ como ‘flatMap()’
+
+67
+00:03:44,387 --> 00:03:48,078
+permitem alcançar o potencial valor dentro do `Option`
+
+68
+00:03:48,270 --> 00:03:50,730
+mas fazem em um estilo imperativo,
+
+69
+00:03:50,884 --> 00:03:54,401
+onde há uma instrução por vez, em uma sequência,
+
+70
+00:03:54,433 --> 00:03:55,831
+mostrando o que está acontecendo
+
+71
+00:03:56,876 --> 00:04:01,063
+No Arrow as ‘monad comprehensions’ são implementadas usando coroutines (corotinas)
+
+72
+00:04:01,359 --> 00:04:03,225
+Aqui a função ‘bind()’
+
+73
+00:04:03,273 --> 00:04:06,615
+interliga ao valor da esquerda, assim que o ‘flatMap()’ termina
+
+74
+00:04:07,220 --> 00:04:09,744
+Isso acontece apenas se o `Option` é `Some`
+
+75
+00:04:10,221 --> 00:04:12,340
+No caso do `Option` ser vazio,
+
+76
+00:04:12,518 --> 00:04:16,376
+a ‘monad comprehension’ finalizará, retornando `None`
+
+77
+00:04:18,482 --> 00:04:22,643
+Assim como usamos ‘monad comprehension’ para processos sequenciais,
+
+78
+00:04:22,682 --> 00:04:26,056
+sempre que temos operações independentes que podem ser processadas
+
+79
+00:04:26,081 --> 00:04:30,403
+em paralelo ou separadamente, usamos o construtor ‘applicative’
+
+80
+00:04:30,949 --> 00:04:33,632
+Este construtor tem duas características principais
+
+81
+00:04:33,757 --> 00:04:36,598
+A primeira é que preserva o tipo da informação,
+
+82
+00:04:36,623 --> 00:04:40,131
+independente da aridade dos métodos ou número de `Options`
+
+83
+00:04:40,515 --> 00:04:43,316
+A segunda é que um callback é executado
+
+84
+00:04:43,401 --> 00:04:48,402
+se todos os valores forem completados, resolvidos e do tipo `Some`
+
+85
+00:04:49,275 --> 00:04:51,945
+No caso de algum valor ser `None`
+
+86
+00:04:52,041 --> 00:04:55,549
+o ‘map()’ não faz a adição e `None` é retornado
+
+87
+00:04:56,670 --> 00:04:58,654
+Nesse vídeo aprendemos sobre `Option`
+
+88
+00:04:58,697 --> 00:05:02,031
+e diferentes métodos e funções que podemos usar para transformar seus valores
+
+89
+00:05:02,132 --> 00:05:04,148
+e processar em um contexto opcional
+
+90
+00:05:04,811 --> 00:05:08,423
+Nos próximos vídeos, aprenderemos sobre mais ‘datatypes’, ‘typeclasses’ e
+
+91
+00:05:08,614 --> 00:05:11,487
+o modelo unificado de programação que o Arrow propõe
+
+92
+00:05:11,605 --> 00:05:12,533
+Obrigado por assistir!
+
+93
+00:05:13,144 --> 00:05:24,826
+[Música]
+
