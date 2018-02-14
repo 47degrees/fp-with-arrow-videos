@@ -360,4 +360,4 @@ Thanks for watching!
 - Slack : [https://kotlinlang.slack.com/messages/C5UPMM0A0](https://kotlinlang.slack.com/messages/C5UPMM0A0)
 - FP with Arrow
 - 47 Degrees : [http://47deg.com](http://47deg.com)
-- @calvellido : [https://twitter.com/raulraja](https://twitter.com/calvellido)
+- @calvellido : [https://twitter.com/calvellido](https://twitter.com/calvellido)
