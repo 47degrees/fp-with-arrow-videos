@@ -319,7 +319,7 @@ data class Person(id: UUID, name: String, year: Int)
 // Note each Either is of a different type
 val eId: Either<KnownError, UUID> = Right(UUID.randomUUID())
 val eName: Either<KnownError, String> = Right("William Alvin Howard")
-val eAge: Either<KnownError, String> = Right(1926)
+val eAge: Either<KnownError, Int> = Right(1926)
 
 Either.applicative<KnownError>().map(eId, eName, eAge, { (id, name, age) ->
   Person(id, name, age)
@@ -340,7 +340,7 @@ data class Person(id: UUID, name: String, year: Int)
 // Note each Either is of a different type
 val eId: Either<KnownError, UUID> = Right(UUID.randomUUID())
 val eName: Either<KnownError, String> = Left(KnownError)
-val eAge: Either<KnownError, String> = Right(1926)
+val eAge: Either<KnownError, Int> = Right(1926)
 
 Either.applicative<KnownError>().map(eId, eName, eAge, { (id, name, age) ->
   Person(id, name, age)
