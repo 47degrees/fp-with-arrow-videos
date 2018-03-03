@@ -187,7 +187,7 @@ class Repository<F> @Inject constructor(
 
 ---
 
-# Option :: Conclusion
+# Conclusion
 
 - __Λrrow encourages a unified programming model__ in which you can solve problems cohesively in all contexts following Typed Functional Programming principles applied to the Kotlin Programming Language.
 
