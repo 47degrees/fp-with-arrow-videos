@@ -5,23 +5,43 @@ slidenumbers: true
 # Id
 
 __`Id`__ is a data type used in __Λrrow__ to model pure values.
+Id is mostly useful when used as interpretation target since it represents no effect
 
 ---
 
-
 # Id
 
-Using this type declaration, we can treat our __`Id`__ type constructor as a **Monad** and as a **Comonad**
+These two progams are equivalent and show __Id__ is not that useful when used standalone
 
 ```kotlin
 A -> Id<A>
 
 val id: Id<Int> = Id.pure(3)
-id.map{it + 3}
+id.map { it + 3 }
 // Id(value=6)
+
+val id: Int = 3
+3 + 3
 ```
 
 ---
+
+# Id
+
+__Id__ is usefull when used as interpretation target
+
+```kotlin
+import arrow.typeclasses.*
+
+inline fun <reified F> add3(n: Int, A: Applicative<F> = applicative()): Kind<F, Int> =
+  A.pure(n + 3)
+  
+add3<ForId>(1) // Id(3)
+add3<ForOption>(1) // Option(3)
+```
+
+---
+
 # Id :: Transformations
 
 We can transform __Id__ values through several built in functions
@@ -62,16 +82,6 @@ id1.flatMap { one ->
         }
     }
 //Id(value=3)
-```
-
----
-# Id :: coflatMap
-
-__coflatMap__ allows us to compute over the contents of multiple __Id< * >__ values 
-
-```kotlin
-id.coflatMap { "string" }
-// Id(value="string")
 ```
 
 ---
@@ -119,9 +129,9 @@ Id.monad().binding {
 ```kotlin
 data class Person(id: UUID, name: String, year: Int)
 
-val idName: Id<String> = Id.pure("William Alvin Howard")
-val idAge: Id<Int> = Id.pure(1926)
-val idId : Id<UUID> = Id.pure(UUID.randomUUID())
+val idName: Id<String>  = Id.pure("William Alvin Howard")
+val idAge: Id<Int> 		 = Id.pure(1926)
+val idId: Id<UUID>      = Id.pure(UUID.randomUUID())
 
 Id.applicative().map(idId, idName, idAge, { (id, name, age) ->
     Person(id, name, age)
@@ -133,7 +143,7 @@ Id.applicative().map(idId, idName, idAge, { (id, name, age) ->
 
 # Id :: Conclusion
 
-- Id is used to model pure values. git
+- Id is used to model pure values. 
 - We can easily construct values of `Id` with `pure(1)`
 - __map__, __flatMap__ and others are used to compute over the internal contents of an Id value.
 - __Id.monad<L>().binding { ... } Comprehensions__ can be __used to imperatively compute__ over multiple Id values in sequence.
