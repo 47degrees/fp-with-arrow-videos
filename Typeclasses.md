@@ -81,7 +81,7 @@ interface ListKSemigroupInstance<A> : Semigroup<ListK<A>> {
 Once an instance is declared the typeclass can be used in concrete code
 
 ```kotlin
-semigroup<ForListK>.combine(listOf(1, 2).k(), listOf(3, 4).k())
+semigroup<ForListK>().combine(listOf(1, 2).k(), listOf(3, 4).k())
 // [1,2,3,4]
 ```
 
