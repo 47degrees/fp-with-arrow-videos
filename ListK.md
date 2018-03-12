@@ -1,6 +1,6 @@
 # Intro
 
-Welcome to the series of videos about functional programming in Kotlin with Arrow. Arrow is a library that is packed with data types and type classes bringing typed FP to Kotlin. In this video, we're going to learn about List data type and what it's used for.
+Welcome to the series of videos about functional programming in Kotlin with Arrow. Arrow is a library that is packed with data types and type classes bringing typed FP to Kotlin. In this video, we're going to learn about the List data type and what it's used for.
 
 # Slide 1
 ```
@@ -14,7 +14,7 @@ compile ' io.arrow-kt:arrow-data:$arrowVersion'
 import arrow.data.ListK 
 
 ```
-ListK is a higher kinded wrapper around the List collection interface and it's available in the arrow data library
+ListK is a higher kinded wrapper around the List collection interface and, it's available in the arrow data library.
 
 # Slide 2
 ```
@@ -33,13 +33,13 @@ ListK(listOf(1, 2, 3))
 ListK.pure(1)
 
 ```
-In the following examples ListK is created from the Kotlin List type with a convient k() function, using the constructor and invoking the pure method
+In the following examples, ListK is created from the Kotlin List type with a convenient k() function, using the constructor and invoking the pure method.
 
 # Slide 3
 ```
 ListK :: Monoid 
 
-ListK auto derives its Monoid instance
+ListK auto derives its Monoid instance.
 
 val list1 = listOf(1, 2, 3).k()
 
@@ -50,7 +50,7 @@ list1.combineK(list2)
 
 ```
 
-ListK auto derives its Monoid instance and can be guaranteed to be associative by using the combineK method to combine two different lists
+ListK auto derives its Monoid instance and can be guaranteed to be associative by using the combineK method to combine two different lists.
 
 # Slide 4
 ```
@@ -62,7 +62,7 @@ numbers.foldLeft(0) {acc, n  -> acc + n }
 // 6
 
 ```
-We can fold over the list transforming the values contained in the list to produce a single result. In this case, we have 2 arguments: the first parameter is the initial value and the second value is a function for transforming the value in each iteration
+We can fold over the list transforming the values contained in the list to produce a single result. In this case, we have two arguments: the first parameter is the initial value and the second value is a function for transforming the value in each iteration.
 
 # Slide 5
 ```
@@ -77,14 +77,14 @@ numbers.map { it * 2 }
 
 ```
 
-When we map a ListK, we are applying a function to each element in the list in order to change the content value or transforming to another type
+When we map a ListK, we are applying a function to each element in the list in order to change the content value or transform to another type.
 
 # Slide 6
 
 ```
 ListK :: flatMap 
 
-flatMap allows us to compute over the contents of multiple ListK< * > values
+flatMap allows us to compute over the contents of multiple ListK< * > values.
 
 val listOne= listOf(1, 2, 3).k()
 val listTwo= listOf(4, 5, 6).k()
@@ -96,7 +96,7 @@ numbers.map { it * 2 }
 
 ```
 
-ListK supports flapMap in order to allow to compute over different ListK values execute them sequentially
+ListK supports flapMap in order to allow us to compute over different ListK values and execute them sequentially.
 
 
 # Slide 7
@@ -116,7 +116,7 @@ val result = ListK.monad().binding {
 
 ```
 
-ListK supports monad comprehensions for composing sequential chains of actions with imperative style
+ListK supports monad comprehensions for composing sequential chain of actions with imperative style.
 
 # Slide 8
 
@@ -133,14 +133,14 @@ ListK.applicative().map(listOne, listTwo) {
 
 ```
 
-With Applicative Builder we can use functions of any number of arguments
+With Applicative Builder, we can use functions of any number of arguments.
 
 # Slide 9
 
 ```
 SequenceK
 
-SequenceK implements lazy lists representing lazily-evaluated ordered sequence of homogenous values.
+SequenceK implements lazy lists representing lazily-evaluated ordered sequences of homogenous values.
 
 val sequenceOne = sequenceOf(1, 2, 3).k()
 val sequenceTwo = sequenceOf(4, 5, 6).k()
@@ -150,12 +150,12 @@ sequenceOne.combineK(sequenceTwo )
 
 ```
 
-Finally, you can use SequenceK in the same way that ListK for representing lazily-evaluated ordered sequence
+Finally, you can use SequenceK in the same way as ListK for representing lazily-evaluated ordered sequences.
 
 
 # Final
 
-In this video, we learned about ListK and SequenceK and the different methods to create it. We learnt about combine, fold and map list.
+In this video, we learned about ListK and SequenceK and the different methods to create it. We learned about combine, fold, and map list.
 
-We'll learn more about those in the next series. Thanks for watching.
+We'll learn more about those in the next episode. Thanks for watching.
 
