@@ -25,7 +25,7 @@ data class Defer<out A>(val thunk: () -> Eval<A>) : Eval<A>()
 
 # Eval :: Now
 
-__`Eval.now(value)`__ allows us to contruct eval instances from already computed values
+__`Eval.now(value)`__ allows us to construct eval instances from already computed values
 
 ```kotlin
 import arrow.*
@@ -40,7 +40,7 @@ eager.value()
 
 # Eval :: Later
 
-Defers evaluation of a potentially expensive computation until __`.value()`__ is invoked and memoizes it's results
+Delays evaluation of a potentially expensive computation until __`.value()`__ is invoked and memoizes its results
 
 ```kotlin
 val lazyEvaled = Eval.later { "expensive computation" }
@@ -64,7 +64,7 @@ alwaysEvaled.value()
 
 # Eval :: Stack safety
 
-To represent absent values we use __`None`__
+Eval is stack safe
 
 ```kotlin
 fun even(n: Int): Eval<Boolean> =
