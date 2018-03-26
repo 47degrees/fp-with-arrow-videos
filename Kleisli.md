@@ -54,6 +54,26 @@ optNumber.getOrElse { 0 }
 
 ---
 
+# Kleisli :: Ap
+The `ap` function transform the `Kleisli` into another `Kleisli` 
+
+with a function as a output value.
+
+```kotlin
+import arrow.data.fix
+
+val intToString = {number:Int -> number.toString()}
+
+val stringIdKleisli = Kleisli { number: Int ->
+  Id.pure(intToString)
+}
+  
+val strId = doubleIdKleisli.ap(stringIdKleisli,Id.applicative()).fix().run(1)
+// Id("1.0")
+```
+
+---
+
 # Kleisli :: Map
 
 The `map` function modify the `Kleisli` output value with a function
@@ -82,7 +102,7 @@ val stringIdKleisli = Kleisli { number: Int ->
 }
   
 val strId = doubleIdKleisli.flatMap({stringIdKleisli},Id.monad()).fix().run(1)
-// Some(1.0)
+// Id("1.0")
 ```
 
 ---
