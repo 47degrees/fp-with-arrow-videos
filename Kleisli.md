@@ -69,7 +69,7 @@ val composedConfig = configKleisli.run(Config(1,2.0))
 ---
 
 # Kleisli :: Ask
-The `ask` function create a `Kleisli` with the same input and output type 
+The `ask` function creates a `Kleisli` with the same input and output type 
 
 inside the monadic context, so you can extract the dependency into a value
 
@@ -128,7 +128,7 @@ It can be used with another `Kleisli` like the `flatMap` function
 import arrow.data.fix
 
 val doubleOptionKleisli = Kleisli { number: Double ->
-   Some(number+1.0)
+  Some(number+1.0)
 }
   
 val doublePlusId = doubleIdKleisli.andThen(doubleOptionKleisli,Option.monad()).fix().run(1)
@@ -143,7 +143,7 @@ With another function like the `map` function
 
 ```kotlin
 val doublePlusId =doubleIdKleisli.andThen({
-number: Double -> Some(number+1.0)
+  number: Double -> Some(number+1.0)
 }, Option.monad()).fix().run(1)
 // Some(2.0)
 ```
