@@ -4,11 +4,11 @@ slidenumbers: true
 
 # Kleisli 
 
-__`Kleisli`__ is a data type used in __Λrrow__ to model a secuence of chained functions 
+__`Kleisli`__ is a data type used in __Λrrow__ to model a sequence of chained functions 
 
-of the shape (A) -> F<B> where A is the result of a previously executed computation 
+of the shape `(A) -> F<B>` where A is the result of a previously executed computation 
 
-and F<B> represents any data type such as DeferredK, IO, ObservableK, Option etc. 
+and `F<B>` represents any data type such as `DeferredK`, `IO`, `ObservableK`, `Option`, etc. 
 
 that has a type argument.
 
@@ -45,9 +45,9 @@ val doubleId = doubleIdKleisli.run(1)
 
 The __`local`__ function allows doing a conversion inside the `Kleisli` 
 
-to the original input value before the Kleisli will be executed,
+to the original input value before the `Kleisli` will be executed,
 
-creating a Kleisli with the input type of the conversion
+creating a `Kleisli` with the input type of the conversion
 
 ```kotlin
 val k1: Kleisli<ForOption, Int, String> = Kleisli { Some(it.toString()) }
@@ -69,7 +69,7 @@ val composedConfig = configKleisli.run(Config(1,2.0))
 ---
 
 # Kleisli :: Ask
-The `ask` function create a Kleisli with the same input and output type 
+The `ask` function create a `Kleisli` with the same input and output type 
 
 inside the monadic context, so you can extract the dependency into a value
 
