@@ -4,23 +4,27 @@ slidenumbers: true
 
 # Kleisli 
 
-__`Kleisli`__ is a data type used in __Λrrow__ to model a transformation 
+__`Kleisli`__ is a data type used in __Λrrow__ to model a secuence of chained functions 
 
-from one type into another inside a monadic context
+of the shape (A) -> F<B> where A is the result of a previously executed computation 
+
+and F<B> represents any data type such as DeferredK, IO, ObservableK, Option etc. 
+
+that has a type argument.
 
 ---
 
-# Kleisli :: ADT
+# Kleisli
 
 __`Kleisli`__ represents an arrow from __`<D>`__ to a monadic value __`Kind<F, A>`__.
 
 That means when we create a `Kleisli<Id,Int,Double>` 
 
-we are doing `<Int> -> Id<Double>`
+we are wrapping a value of `(Int) -> Id<Double>`
 
 ---
 
-# Kleisli :: ADT
+# Kleisli
 
 Inside the `Kleisli` we specify the transformation.
 
@@ -46,30 +50,37 @@ to the original input value before the Kleisli will be executed,
 creating a Kleisli with the input type of the conversion
 
 ```kotlin
-val localId = doubleIdKleisli.local { optNumber :Option<Int> -> 
-optNumber.getOrElse { 0 } 
-}.run(None)
-//Id(0.0)
+val k1: Kleisli<ForOption, Int, String> = Kleisli { Some(it.toString()) }
+val k2: Kleisli<ForOption, Double, String> = Kleisli { Some(it.toString()) }
+
+data class Config(val n: Int, val d: Double)
+
+val configKleisli: Kleisli<ForOption, Config, String> =
+  Kleisli.monad<ForOption, Config>().binding {
+    val a = k1.local<Config> { it.n }.bind()
+    val b = k2.local<Config> { it.d }.bind()
+    a + b
+  }.fix()
+  
+val composedConfig = configKleisli.run(Config(1,2.0))
+//Some(12.0)
 ```
 
 ---
 
-# Kleisli :: Ap
-The `ap` function transform the `Kleisli` into another `Kleisli` 
+# Kleisli :: Ask
+The `ask` function create a Kleisli with the same input and output type 
 
-with a function as a output value.
+inside the monadic context, so you can extract the dependency into a value
 
 ```kotlin
-import arrow.data.fix
+val askKleisli = Kleisli.monad<ForOption, Config>().binding {
+    val (n, d) = Kleisli.ask<ForOption, Config>().bind()
+    n + d
+  }.fix()
 
-val intToString = {number:Int -> number.toString()}
-
-val stringIdKleisli = Kleisli { number: Int ->
-  Id.pure(intToString)
-}
-  
-val strId = doubleIdKleisli.ap(stringIdKleisli,Id.applicative()).fix().run(1)
-// Id("1.0")
+val askOption = askKleisli.run(Config(1,2.0))
+// Some(3.0)
 ```
 
 ---
