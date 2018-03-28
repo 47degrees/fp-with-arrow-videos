@@ -93,7 +93,7 @@ __map__ allows us to transform __A__ into __B__ in __F<Option< A >>__
 ```kotlin
 val optionTIO: OptionT<ForIO, Int> = OptionT(IO(Some(1)))
 
-optionTIO.map({ it + 1 }, IO.functor())
+optionTIO.map(IO.functor()) { it + 1 }
 // IO(Some(2))
 ```
 
@@ -106,7 +106,7 @@ When we __map__ over __OptionT__ values that are absent the transformation is ne
 ```kotlin
 val optionTIO: OptionT<ForIO, Int> = OptionT(IO(None))
 
-optionTIO.map { it + 1 }
+optionTIO.map(IO.functor()) { it + 1 }
 // IO(None)
 ```
 
@@ -120,8 +120,8 @@ __flatMap__ allows us to compute over the contents of multiple __OptionT< * >__ 
 val a: OptionT<ForIO, Int> = OptionT(IO(Some(1)))
 val b: OptionT<ForIO, Int> = OptionT(IO(Some(2)))
 
-a.flatMap { one -> 
-  b.map { two -> 
+a.flatMap(IO.functor()) { one -> 
+  b.map(IO.functor()) { two -> 
     one + two  
   }
 }.fix()
@@ -143,7 +143,7 @@ OptionT.monad(IO.monad()).binding {
     val one = a.bind()
     val two = b.bind()
     val three = c.bind()
-    yields(one + two + three)
+    one + two + three
 }.fix()
 // IO(Some(6))
 ```
@@ -163,7 +163,7 @@ OptionT.monad(IO.monad()).binding {
     val one = a.bind()
     val two = b.bind()
     val three = c.bind()
-    yields(one + two + three)
+    one + two + three
 }.fix()
 // IO(Some(6))
 ```
