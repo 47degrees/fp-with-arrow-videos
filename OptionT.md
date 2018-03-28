@@ -93,7 +93,7 @@ __map__ allows us to transform __A__ into __B__ in __F<Option< A >>__
 ```kotlin
 val optionTIO: OptionT<ForIO, Int> = OptionT(IO(Some(1)))
 
-optionTIO.map({ it + 1 }
+optionTIO.map({ it + 1 }, IO.functor())
 // IO(Some(2))
 ```
 
