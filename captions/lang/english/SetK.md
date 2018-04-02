@@ -82,11 +82,9 @@ Also, Foldable type classes offer another method called foldRight. As the name i
 
 Here, we are again accumulating a power of each number of a set.
 
-But you can see some differences in its use. The reason for this is because, in contrast with foldLeft which operates in an eager way, foldRight will evaluate the passed function lazily, only performing the computation when we called the `value` method.
+But you can see some differences in its use. The reason for this is because, in contrast with foldLeft which operates in an eager way, foldRight will evaluate the passed function lazily, only performing the computation when we call the `value` method. This allows us to support laziness in a stack-safe way.
 
-This allows us to support laziness in a stack-safe way. In Arrow, for this kind of lazy computed values, Eval can be used.
-
-For more information on this data type, you can check the dedicated Eval video in the series.
+In Arrow, for this kind of lazy computed values, Eval can be used. For more information on this data type, you can check the dedicated Eval video in the series.
 
 
 
