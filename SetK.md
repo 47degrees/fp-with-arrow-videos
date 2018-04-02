@@ -87,7 +87,9 @@ val combined = primes.combine(emptySet)
 
 # SetK :: SemigroupK, MonoidK
 
-__`SemigroupK`__ and __`MonoidK`__ are similar to our previous `Semigroup` and `Monoid` type classes, but they work with data types instead of objects. They can combine two data types together, allowing two `F<A>` values to be combined, for any `A`.
+__`SemigroupK`__ and __`MonoidK`__ are similar to our previous `Semigroup` and `Monoid` type classes, but they work with data types instead of objects.
+
+They can combine two data types together, allowing two `F<A>` values to be combined, for any `A`.
 
 With `SemigroupK` and `MonoidK`, the combination operation depends on the structure of `F`, but not the structure of `A`.
 
