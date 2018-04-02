@@ -30,12 +30,12 @@ setOf(1, 2, 5, 3, 2).k()
 
 ---
 
-# SetK :: pure()
+# SetK :: just()
 
-Or through the __`pure()`__ function on __SetK__.
+Or through the __`just()`__ function on __SetK__.
 
 ```kotlin
-SetK.pure(1)
+SetK.just(1)
 // SetK(set=[1])
 ```
 
@@ -57,6 +57,22 @@ __`SetK`__ auto derives the following different type classes instances, giving i
 
 A __`Semigroup`__ for some given type `A` has a single operation (called __`combine`__), which takes two values of type `A`, and returns a value of type `A`. This operation must be guaranteed to be associative.
 
+
+```kotlin
+val evenNumbers = setOf(4, 2, 4, 6).k()
+// SetKW(set=[4, 2, 6])
+val oddNumbers = setOf(3, 5, 3, 1).k()
+// SetKW(set=[3, 5, 1])
+val numbers = evenNumbers.combine(oddNumbers)
+// SetKW(set=[4, 2, 6, 3, 5, 1])
+
+```
+---
+
+# SetK :: SemigroupK
+
+A __`SemigroupK`__ for some given type `A` has a single operation (called __`combine`__), which takes two values of type `A`, and returns a value of type `A`. This operation must be guaranteed to be associative.
+
 The same can be said about `SemigroupK`, but for data types instead of objects.
 
 
@@ -69,7 +85,7 @@ val numbers = evenNumbers.combine(oddNumbers)
 // SetKW(set=[4, 2, 6, 3, 5, 1])
 
 ```
-
+---
 
 # SetK :: Monoid
 
@@ -86,7 +102,24 @@ val combined = primes.combine(emptySet)
 // SetK(set=[7, 2, 5, 3])
 
 ```
+---
 
+# SetK :: MonoidK
+
+__`MonoidK`__ extends the `SemigroupK` type class, adding an __`empty`__ method to semigroup's `combineK`. The empty method must return a value that when combined with any other data type returns the other one.
+
+The same will occur with `MonoidK`, but working with data types instead of objects.
+
+```kotlin
+val primes = setOf(7, 2, 5, 3, 2).k()
+// SetK(set=[7, 2, 5, 3])
+val emptySet = primes.empty()
+// SetKW(set=[])
+val combined = primes.combine(emptySet)
+// SetK(set=[7, 2, 5, 3])
+
+```
+---
 
 # SetK :: Foldable (foldLeft)
 
@@ -134,7 +167,7 @@ val foldRight = primes.foldRight(Eval.now(0), { number, sum -> Eval.now(sum.valu
 # SetK :: Conclusion
 
 - __All techniques demonstrated are also available to other data types__ such as `ListK` or `SequenceK`, and you can build adapters for any data types.
-- We will learn more about other data types like `MapK`, `SortedMapK`, and type classes that power these abstraction such as `Semigroup`, `Monoid` and `Foldable` in other videos.
+- We will learn more about other data types like `MapK`, `SortedMapK`, and type classes that power these abstractions such as `Semigroup`, `Monoid` and `Foldable` in other videos.
 - __Λrrow encourages a unified programming model__ in which you can solve problems cohesively in all contexts following Typed Functional Programming principles applied to the Kotlin Programming Language.
 
 ---
