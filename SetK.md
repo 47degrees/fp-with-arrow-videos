@@ -55,26 +55,9 @@ __`SetK`__ auto derives the following different type classes instances, giving i
 
 # SetK :: Semigroup
 
-A __`Semigroup`__ for some given type `A` has a single operation (called __`combine`__), which takes two values of type `A`, and returns a value of type `A`. This operation must be guaranteed to be associative.
+A __`Semigroup`__ for some given type `A` has a single operation, called __`combine`__, which takes two values of type `A`, and returns a value of type `A`.
 
-
-```kotlin
-val evenNumbers = setOf(4, 2, 4, 6).k()
-// SetKW(set=[4, 2, 6])
-val oddNumbers = setOf(3, 5, 3, 1).k()
-// SetKW(set=[3, 5, 1])
-val numbers = evenNumbers.combine(oddNumbers)
-// SetKW(set=[4, 2, 6, 3, 5, 1])
-
-```
----
-
-# SetK :: SemigroupK
-
-A __`SemigroupK`__ for some given type `A` has a single operation (called __`combine`__), which takes two values of type `A`, and returns a value of type `A`. This operation must be guaranteed to be associative.
-
-The same can be said about `SemigroupK`, but for data types instead of objects.
-
+This operation must be guaranteed to be associative.
 
 ```kotlin
 val evenNumbers = setOf(4, 2, 4, 6).k()
@@ -91,8 +74,6 @@ val numbers = evenNumbers.combine(oddNumbers)
 
 __`Monoid`__ extends the `Semigroup` type class, adding an __`empty`__ method to semigroup's `combine`. The empty method must return a value that when combined with any other instance of that type returns the other instance.
 
-The same will occur with `MonoidK`, but working with data types instead of objects.
-
 ```kotlin
 val primes = setOf(7, 2, 5, 3, 2).k()
 // SetK(set=[7, 2, 5, 3])
@@ -104,28 +85,20 @@ val combined = primes.combine(emptySet)
 ```
 ---
 
-# SetK :: MonoidK
+# SetK :: SemigroupK, MonoidK
 
-__`MonoidK`__ extends the `SemigroupK` type class, adding an __`empty`__ method to semigroup's `combineK`. The empty method must return a value that when combined with any other data type returns the other one.
+__`SemigroupK`__ and __`MonoidK`__ are similar to our previous `Semigroup` and `Monoid` type classes, but they work with data types instead of objects. They can combine two data types together, allowing two `F<A>` values to be combined, for any `A`.
 
-The same will occur with `MonoidK`, but working with data types instead of objects.
+With `SemigroupK` and `MonoidK`, the combination operation depends on the structure of `F`, but not the structure of `A`.
 
-```kotlin
-val primes = setOf(7, 2, 5, 3, 2).k()
-// SetK(set=[7, 2, 5, 3])
-val emptySet = primes.empty()
-// SetKW(set=[])
-val combined = primes.combine(emptySet)
-// SetK(set=[7, 2, 5, 3])
 
-```
 ---
 
 # SetK :: Foldable (foldLeft)
 
 In a __`Foldable`__ we can compute a single value from visiting each element.
 
-`foldLeft` eagerly folds the SetK content from __left to right__.
+`foldLeft` eagerly folds the `SetK` content from __left to right__.
 
 
 ```kotlin
@@ -140,16 +113,15 @@ val foldLeft = primes.foldLeft(0, {sum, number -> sum + (number * number)})
 
 # SetK :: Foldable (foldRight)
 
-
 In a __`Foldable`__ we can compute a single value from visiting each element.
 
-`foldRight` lazily folds the SetK content from __right to left__.
+`foldRight` lazily folds the `SetK` content from __right to left__.
 
 
 ```kotlin
 val primes = setOf(7, 2, 5, 3, 2).k()
 // SetK(set=[7, 2, 5, 3])
-val foldRight = primes.foldRight(Eval.now(0), { number, sum -> Eval.now(sum.value() + (number *number)) })
+val foldRight = primes.foldRight(Eval.now(0), { number, sum -> Eval.now(sum.value() + (number * number)) })
 // 87
 
 ```
@@ -159,7 +131,7 @@ val foldRight = primes.foldRight(Eval.now(0), { number, sum -> Eval.now(sum.valu
 # SetK :: Conclusion
 
 - SetK is __used to wrap over Kotlin’s Set collections__ to give them capabilities related to type classes provided by Arrow.
-- We can easily construct values of `SetK` with `setOf(2, 5, 2).k()`, `SetK(setOf(2, 5, 2))` or `SetK.pure(2)`.
+- We can easily construct values of `SetK` with `setOf(2, 5, 2).k()`, `SetK(setOf(2, 5, 2))` or `SetK.just(2)`.
 - `SetK` auto derives different type classes instances like `Semigroup`, `SemigroupK`, `Monoid`, `MonoidK`, and `Foldable` .
 
 ---
