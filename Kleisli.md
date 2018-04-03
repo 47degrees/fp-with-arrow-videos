@@ -57,7 +57,7 @@ val doubleId = doubleIdKleisli.run(1)
 
 Inside the Kleisli, we specify the transformation.
 If we want to transform from the Int to the Id<Double>, 
-we create a Kleisli with a function which receives a Integer as parameter an return the Id<Double>
+we create a Kleisli with a function which receives an Integer as parameter and returns the Id<Double>.
 
 ---
 
@@ -86,8 +86,8 @@ val composedConfig = configKleisli.run(Config(1,2.0))
 
 The local function allows us to do a conversion on the original input value 
 inside the Kleisli before it's executed, creating a Kleisli with the input type of the conversion.
-In the sample we are creating a Kleisli which receives a Config object and use local to transform 
-the Config parameter into an Integer or Double
+In this sample, we are creating a Kleisli which receives a Config object and uses local to transform 
+the Config parameter into an Integer or Double.
 
 
 ---
@@ -109,9 +109,9 @@ val askOption = askKleisli.run(Config(1,2.0))
 ```
 
 The ask function creates a Kleisli with the same input and output type inside the monadic context, 
-so you can extract the dependency into a value, 
-in this case we are creating a Kleisli from Config to Option<Config> 
-with ask and then extract the values to do another operation
+so you can extract the dependency into a value. 
+In this case, we are creating a Kleisli from Config to Option<Config> 
+with ask and then extracting the values to do another operation.
 
 
 ---
@@ -175,7 +175,7 @@ val doublePlusId = doubleIdKleisli.andThen(doubleOptionKleisli,Option.monad()).f
 
 The andThen function composes the Kleisli output.
 We have different ways to use andThen,
-It can be used with another Kleisli like the flatMap function.
+it can be used with another Kleisli like the flatMap function.
 
 
 ---
@@ -191,7 +191,7 @@ val doublePlusId =doubleIdKleisli.andThen({
 // Some(2.0)
 ```
 
-With another function like the map function
+With another function like the map function.
 
 ---
 
@@ -204,7 +204,7 @@ val doubleReplaced =doubleIdKleisli.andThen(Id(2.0), Id.monad()).fix().run(1)
 // Id(2.0)
 ```
 
-Or can be used to replace the Kleisli result
+Or, can be used to replace the Kleisli result.
 
 ---
 
