@@ -1,7 +1,7 @@
 # Intro
 
 Welcome to the series of videos about functional programming in Kotlin with Arrow. 
-Arrow is a library that is packed with data types and type classes bringing typed FP to Kotlin. 
+Arrow is a library that is packed with data types and type classes bringing typed functional programming to Kotlin. 
 In this video, we're going to learn about the Kleisli data type and what it's used for.
 
 #Slide 1
@@ -64,6 +64,6 @@ Or, can be used to replace the Kleisli result.
 
 Kleisli is really useful for encapsulating a transformation which returns a Monadic value or concatenates them.
 In this video, we learned about Kleisli and the different methods to create and use it. 
-We'll learn more about those in the next episode. Thanks for watching.
+We'll learn more about Arrow in the next video. Thanks for watching.
 
 
