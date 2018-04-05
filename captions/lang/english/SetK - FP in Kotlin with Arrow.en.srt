@@ -1,0 +1,204 @@
+﻿1
+00:00:00,679 --> 00:00:04,418
+Welcome to the series of videos about functional programming in Kotlin with Arrow.
+
+2
+00:00:05,060 --> 00:00:11,440
+Arrow is a library packed with data types and type classes bringing functional programming to Kotlin. In this video,
+
+3
+00:00:11,440 --> 00:00:14,379
+we're going to learn about the SetK data type, and what it's used for.
+
+4
+00:00:23,990 --> 00:00:27,639
+SetK is a data type belonging to the wrappers category.
+
+5
+00:00:28,430 --> 00:00:33,220
+These types wrap over some of Kotlin's collections and functions to give them
+
+6
+00:00:33,440 --> 00:00:37,059
+capabilities that are related to the type classes provided by Arrow.
+
+7
+00:00:39,019 --> 00:00:44,979
+SetK can be initialized through a classic constructor, which expects a Set collection.
+
+8
+00:00:46,910 --> 00:00:50,080
+There is also a convenient .k( ) function available,
+
+9
+00:00:50,839 --> 00:00:58,208
+that can be called over the Set interface. Or, you can get a SetK by invoking the SetK .just( )
+
+10
+00:00:58,399 --> 00:00:59,780
+method.
+
+11
+00:00:59,780 --> 00:01:00,980
+This method
+
+12
+00:01:00,980 --> 00:01:05,949
+expects only one parameter, and will return a SetK of just one element.
+
+13
+00:01:07,280 --> 00:01:13,270
+The type classes available for a SetK are Semigroup, SemigroupK, Monoid, MoniodK,
+
+14
+00:01:13,729 --> 00:01:15,729
+and Foldable.
+
+15
+00:01:16,850 --> 00:01:20,140
+Unlike other wrappers, like ListK or SequenceK,
+
+16
+00:01:20,750 --> 00:01:25,569
+SetK doesn't derive Functor, Applicative, Monad, or Traverse. This
+
+17
+00:01:26,330 --> 00:01:30,759
+is due to the lack of ordering guarantees on a Set data structure.
+
+18
+00:01:32,630 --> 00:01:36,039
+A Semigroup is a set `A` with an associative operation,
+
+19
+00:01:37,069 --> 00:01:39,069
+which we will be calling `combine`.
+
+20
+00:01:40,130 --> 00:01:47,649
+Here, we are combining two Sets, which in our case is performed as a concatenation of the content on each structure.
+
+21
+00:01:49,250 --> 00:01:56,319
+We can define Moniods as combinable objects that have an empty value, which functions as an identity.
+
+22
+00:01:57,380 --> 00:02:04,630
+In our code snippet, we can check that by calling the .empty( ) method, we will receive a SetK with no inner values.
+
+23
+00:02:05,660 --> 00:02:11,109
+And then, when combining it with a SetK, the same SetK will be returned.
+
+24
+00:02:13,560 --> 00:02:17,120
+SemigroupK and MoniodK are special cases.
+
+25
+00:02:17,820 --> 00:02:24,379
+They are universal type classes, which operate on `kinds`, which is what the `K` in their names stands for.
+
+26
+00:02:25,830 --> 00:02:31,100
+The subtle difference between Semigroup and SemigroupK, Monoid and MonoidK,
+
+27
+00:02:31,410 --> 00:02:36,589
+is that while Semigroup and Monoid operate on the values contained in the type constructor,
+
+28
+00:02:37,290 --> 00:02:43,879
+SemigroupK and MoniodK operate exclusively over the entire structure and not the individual items.
+
+29
+00:02:45,120 --> 00:02:50,750
+We will take an in-depth look at those in future videos, as they have enough content on their own.
+
+30
+00:02:52,500 --> 00:02:57,290
+A Foldable has a structure from which a value can be computed from visiting each element.
+
+31
+00:02:58,260 --> 00:03:03,230
+We can fold over a set, transforming the values contained in the set to produce a single result.
+
+32
+00:03:04,050 --> 00:03:06,230
+In this case, we have two arguments:
+
+33
+00:03:06,810 --> 00:03:13,790
+the first parameter is the initial value and the second is a function for transforming the value in each iteration.
+
+34
+00:03:14,820 --> 00:03:19,489
+In this example, we are accumulating a power of each number contained in our set.
+
+35
+00:03:21,480 --> 00:03:23,190
+In addition,
+
+36
+00:03:23,190 --> 00:03:25,790
+Foldable type classes offer another method called
+
+37
+00:03:26,580 --> 00:03:27,630
+foldRight.
+
+38
+00:03:27,630 --> 00:03:34,999
+As the name implies, foldRight starts folding from the right-side, and processes the values in a right-to-left order.
+
+39
+00:03:36,209 --> 00:03:39,919
+Here again, we're accumulating a power of each number of a set.
+
+40
+00:03:40,860 --> 00:03:43,760
+But, you can see some differences in its use.
+
+41
+00:03:44,580 --> 00:03:49,700
+The reason for this is because, in contrast with foldLeft, which operates in an eager way,
+
+42
+00:03:50,400 --> 00:03:53,630
+foldRight will evaluate the passed function lazily,
+
+43
+00:03:54,480 --> 00:03:57,888
+only performing the computation when we call the `value` method.
+
+44
+00:03:58,739 --> 00:04:01,909
+This allows us to support laziness in a stack-safe way.
+
+45
+00:04:03,000 --> 00:04:08,089
+In Arrow, for these kinds of lazy computed values, Eval can be used.
+
+46
+00:04:09,090 --> 00:04:13,970
+For more information on this data type, you can check out Eval video in this series.
+
+47
+00:04:15,450 --> 00:04:17,628
+In this video, we learned about SetK
+
+48
+00:04:18,298 --> 00:04:23,537
+As part of Arrow's unified programming model, SetK shares a lot of the functions and
+
+49
+00:04:23,870 --> 00:04:26,540
+different functionalities with other higher-kinded wrappers.
+
+50
+00:04:27,060 --> 00:04:31,070
+We will learn more about those in the next videos. Thanks for watching.
+
+51
+00:04:41,670 --> 00:04:43,670
+ 
+
