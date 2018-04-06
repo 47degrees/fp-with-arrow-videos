@@ -64,6 +64,6 @@ Or, can be used to replace the Kleisli result.
 
 Kleisli is really useful for encapsulating a transformation which returns a Monadic value or concatenates them.
 In this video, we learned about Kleisli and the different methods to create and use it. 
-We'll learn more about those in next videos. Thanks for watching.
+We'll learn more about those in future videos. Thanks for watching.
 
 
