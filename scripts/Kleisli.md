@@ -20,7 +20,7 @@ we are wrapping a value of Int to Id<Double>.
 
 Inside the Kleisli, we specify the transformation.
 If we want to transform from the Int to the Id<Double>, 
-we create a Kleisli with a function which receives an Integer as parameter and returns the Id<Double>.
+we create a Kleisli with a function which receives an Int as parameter and returns the Id<Double>.
 
 #Slide 4
 
@@ -33,8 +33,8 @@ the Config parameter into an Integer or Double.
 
 The ask function creates a Kleisli with the same input and output type inside the monadic context, 
 so you can extract the dependency into a value. 
-In this case, we are creating a Kleisli from Config to Option<Config> 
-with ask and then extracting the values to do another operation.
+In this case, we are creating a Kleisli from Config to Option<Config> with ask 
+and then extracting the values to do another operation.
 
 #Slide 6
 
@@ -44,7 +44,7 @@ once the Kleisli has been executed.
 #Slide 7
 
 The flatMap function maps the Kleisli output into another Kleisli
-with the same input type and monadic context:
+with the same input type and monadic context.
 
 #Slide 8
 
