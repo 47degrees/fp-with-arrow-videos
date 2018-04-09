@@ -27,14 +27,14 @@ we create a Kleisli with a function which receives an Int as parameter and retur
 The local function allows us to do a conversion on the original input value 
 inside the Kleisli before it's executed, creating a Kleisli with the input type of the conversion.
 In this sample, we are creating a Kleisli which receives a Config object and uses local to transform 
-the Config parameter into an Integer or Double.
+the Config parameter into an Int or Double.
 
 #Slide 5
 
 The ask function creates a Kleisli with the same input and output type inside the monadic context, 
 so you can extract the dependency into a value. 
-In this case, we are creating a Kleisli from Config to Option<Config> with ask 
-and then extracting the values to do another operation.
+In this case, we are creating a Kleisli from Config to Option<Config> using ask, 
+and then, extracting the values to do another operation.
 
 #Slide 6
 
