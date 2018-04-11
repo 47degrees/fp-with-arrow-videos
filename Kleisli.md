@@ -14,7 +14,7 @@ and __`F<B>`__ represents any data type that has a type argument such as __`Defe
 
 # Kleisli
 
-__`Kleisli represents an arrow from __`<D>`__ to a monadic value __`Kind<F, A>`__.
+__`Kleisli`__ represents an arrow from __`<D>`__ to a monadic value __`Kind<F, A>`__.
 
 That means, when we create a __`Kleisli<Id,Int,Double>`__
 
