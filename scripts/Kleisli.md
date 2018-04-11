@@ -8,63 +8,63 @@ In this video, we're going to learn about the Kleisli data type and what it's us
 
 Kleisli is a data type used in Λrrow to model a sequence of chained functions 
 of the shape from A to F<B> 
-This allow us to chain transformations of types with a Monadic Context
+This allows us to chain transformations of types with a Monadic Context.
 
 #Slide 2
 
 Kleisli represents an arrow from <D> to a monadic value Kind<F, A>.
-That means, inside the Kleisli we transform the type D into the type A inside F
+That means, inside the Kleisli, we transform the type D into the type A inside F
 
 #Slide 3
 
 Inside the Kleisli, we specify the transformation.
-We can specify a function from the input type to the Monadic context with the type output
-For example a Kleisli<Id,Int,Double> 
-the function will receives an Int as parameter and returns the Id<Double>.
+We can specify a function from the input type to the Monadic context with the type output.
+For example, a Kleisli<Id,Int,Double> 
+the function will receive an Int as parameter and returns the Id<Double>.
 
 #Slide 4
 
 The local function allows us to do a conversion on the original input value before it's executed, 
-creating a Kleisli with the input type of the conversion as the same context and output type.
+creating a Kleisli with the input type of the conversion that's the same context and output type.
 We can create a Kleisli which receives a Config object and uses local to transform 
-the Config parameter into an Int or Double, before the Kleisli k1 or k2 was executed.
+the Config parameter into an Int or Double, before the Kleisli k1 or k2 is executed.
 
 #Slide 5
 
-The ask function creates a Kleisli with the same input and output type inside the monadic context, 
-So, if we don´t need to change to another output type 
-we will use local to get the same type inside the monadic context
+The ask function creates a Kleisli with the same input and output types inside the monadic context.
+So, if we don´t need to change to another output type, 
+we will use local to get the same type inside the monadic context.
 
 #Slide 6
 
 The map function modifies the Kleisli output value once the Kleisli has been executed.
-Then, return a new Kleisli with the new output type to continue with more transformations
+Then, returns a new Kleisli with the new output type to continue with more transformations
 
 #Slide 7
 
-The flatMap function compose the Kleisli with another Kleisli 
-which must to have the same input type as the output type 
+The flatMap function composes the Kleisli with another Kleisli 
+which must have the same input type as the output type 
 from the first Kleisli and the same monadic context to create a new one,
 with the initial input type and monadic context and the second kleisli output type.
 
 #Slide 8
 
 The andThen function composes the Kleisli output.
-We have different ways to use andThen,
-it can be used with another Kleisli like the flatMap function, 
+We have a few ways to use andThen.
+It can be used with another Kleisli like the flatMap function, 
 and return another Kleisli.
 
 #Slide 9
 
 With another function like the map function, 
-changing the output type and return a new Kleisli with a new output type.
+changing the output type and returning a new Kleisli with a new output type.
 
 #Slide 10
 
-Or, can be used to replace the Kleisli result.
-In this case we ignore the original Kleisli result and only get the specified before.
+Or, it can be used to replace the Kleisli result.
+In this case, we ignore the original Kleisli result and only get the specified before.
 This is useful if change the result for one of our transformations 
-and get a new result inside a new Kleisli
+and get a new result inside a new Kleisli.
 
 # Final
 
