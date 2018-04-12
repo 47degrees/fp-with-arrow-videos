@@ -25,7 +25,7 @@ the function will receive an Int as parameter and returns the Id<Double>.
 #Slide 4
 
 The local function allows us to do a conversion on the original input value before it's executed, 
-creating a Kleisli with the input type of the conversion that's the same context and output type.
+creating a Kleisli with the input type of the conversion and the same context and output type.
 We can create a Kleisli which receives a Config object and uses local to transform 
 the Config parameter into an Int or Double, before the Kleisli k1 or k2 is executed.
 
