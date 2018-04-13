@@ -19,16 +19,13 @@ import arrow.data.*
 import arrow.effects.*
 
 
-sealed class NumberError {
-    data class StringToNumberError(val stringNumber: String): NumberError()
-}
-
-typealias StringToNumberError = NumberError.StringToNumberError
+sealed class NumberError
+data class StringToNumberError(val stringNumber: String): NumberError()
 
 fun stringToInt(a: String): Either<StringToNumberError, Int> =
     Try{ a.toInt()}.fold({Either.left(StringToNumberError(a))}, { v -> Either.right(v) })
 
-val eitherInDeferred: DeferredK<Either<StringToNumberError, Int>> = async<Either<StringToNumberError, Int>> { Either.right(1) }.k()
+val eitherInDeferred: DeferredK<Either<StringToNumberError, Int>> = async { Either.right(1) }.k()
 val eitherInList: ListK<Either<StringToNumberError, Int>> = listOf(stringToInt("one"), stringToInt("1")).k()
 val eitherInIO: IO<Either<StringToNumberError, Int>> = IO( {Either.right(1) })
 ```
@@ -64,9 +61,9 @@ eitherTIO.fold(IO.functor(), { "There was an error" }, { it })
 The second argument is a function that addresses the __Left__ case
 
 ```kotlin
-val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(99)})
+val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{ stringToInt("a")})
 eitherTIO.fold(IO.functor(), { "There was an error" }, { it })
-// IO(99)
+// IO("There was an error")
 ```
 
 ---
@@ -101,10 +98,10 @@ eitherTIO.map(IO.functor()) { it + 1 }
 When we __map__ over __EitherT__ values that are a __Left__ the transformation is never applied and __Left__ is returned
 
 ```kotlin
-val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.left(NumberError.StringToNumberError("not good"))})
+val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.left(StringToNumberError("not good"))})
 
 EitherTIO.map(IO.functor()) { it + 1 }
-// IO(Either.left(NumberError.StringToNumberError("not good")))
+// IO(Either.left(StringToNumberError("not good")))
 ```
 
 ---
@@ -117,11 +114,11 @@ __flatMap__ allows us to compute over the contents of multiple __EitherT<E, * >_
 val a: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(1)})
 val b: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(2)})
 
-a.flatMap(IO.monad(), { one ->
+a.flatMap(IO.monad()) { one ->
   b.map(IO.functor(), { two ->
     one + two
   })
-}).fix()
+}.fix()
 
 // IO(Either.right(3))
 ```
@@ -175,7 +172,7 @@ If any of the values is __Left__, __bind()__ will shortcircuit yielding __Left__
 
 ```kotlin
 val a: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(1)})
-val b: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.left(NumberError.StringToNumberError("not good"))})
+val b: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.left(StringToNumberError("not good"))})
 val c: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(3)})
 
 EitherT.monad<ForIO, StringToNumberError>(IO.monad()).binding {
@@ -184,7 +181,7 @@ EitherT.monad<ForIO, StringToNumberError>(IO.monad()).binding {
      val three = c.bind()
      one + two + three
 }.fix()
-// IO(Either.left(NumberError.StringToNumberError("not good")))
+// IO(Either.left(StringToNumberError("not good")))
 ```
 
 ---
