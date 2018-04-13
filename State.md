@@ -8,168 +8,114 @@ slidenumbers: true
 
 ---
 
-# Stack
+# State
 
-As an example, let's build a simple Stack using Arrow's `NonEmptyList` and `Option`:
-
-```
-import arrow.*
-import arrow.core.*
-import arrow.data.*
-
-typealias Stack = Option<Nel<String>>
-```
-
----
-
-# Stack
-
-A Stack needs a `pop` operation:
+Actually, `State` is just an alias of `StateT` within the context of `Id`:
 
 ```
-import arrow.*
-
-fun pop(stack: Stack) = stack.fold({
-    None toT None
-}, {
-    Nel.fromList(it.tail) toT it.head.some()
-})
+typealias State<S, A> = StateT<IdHK, S, A>
 ```
 
-Invoking `pop` on a `Stack` will return a tuple with the resulting Stack and the previous element that was at its top.
+We'll learn more about the `StateT` datatype in next videos.
 
----
+--- 
 
-# Stack
+# State :: invoke
 
-We also need a `push` operation:
-
-```
-fun push(stack: Stack, s: String) = stack.fold({
-    Nel.of(s).some() toT Unit
-}, {
-    Nel(s, it.all).some() toT Unit
-})
-```
-
-In this case, `push` will also return a tuple containing the new version of the `Stack` (including the pushed element) and an `Unit` value we can discard.
-
----
-
-# Stack
-
-Let's try those out!
+Let's create a function that handles a counter with an accumulated value (which would be our `S`) and adds the provided value to it (being the result our `A`). This results in a simple `State<Int, Int>` in which both the state and the returned value are the same:
 
 ```
-fun stackOperations(stack: Stack): Tuple2<Stack, Option<String>> {
-    val (s1, _) = push(stack, "a")
-    val (s2, _) = pop(s1)
-    return pop(s2)
-}
-```
-
-```
-stackOperations(Nel.of("hello", "world", "!").some())
-// Tuple2(a=Some(NonEmptyList(all=[world, !])), b=Some(hello))
-```
-
-```
-stackOperations(Nel.of("hello").some())
-// Tuple2(a=None, b=Some(hello))
-```
-
-Our `Stack` is inmutable so we need to create a new instance every time we push or pop values from it. For that same reason we have to return the newly created Stack with every operation. We can avoid this with `State`.
-
----
-
-# Cleaning it up with State
-
-`State`’s special power is keeping track of state and passing it along.
-
-For instance, our `pop` function takes a `Stack` and returns:
-
-- An updated Stack
-- A String. 
-
-Thus, it can be represented as `Stack -> Tuple2(Stack, String)`, and therefore matches the pattern `S -> Tuple2(S, A)` where `S` is `Stack` and `A` is `String`.
-
----
-
-# Stack implemented via State
-
-Let’s write a new version of `pop` and `push` using `State`:
-
-```
-import arrow.*
-
-fun pop() = State<Stack, Option<String>> { stack ->
-    stack.fold({
-        None toT None
-    }, {
-        Nel.fromList(it.tail) toT it.head.some()
-    })
+fun addCount(n: Int): State<Int, Int> = State { acc ->
+    acc + n toT acc + n
 }
 
-fun push(s: String) = State<Stack, Unit> { stack ->
-    stack.fold({
-        Nel.of(s).some() toT Unit
-    }, {
-        Nel(s, it.all).some() toT Unit
-    })
-}
 ```
 
 ---
 
-# State :: composition
+# State :: changing states
 
-The flatMap method on `State<S, A>` lets you use the result of one `State` in a subsequent `State`. The updated state (`S`) after the first call is passed into the second call. These `flatMap` and `map` methods allow us to use State in for-comprehensions:
+To run an operation on it we use the `runM` function:
 
 ```
-import arrow.typeclasses.*
-import arrow.instances.*
-
-fun stackOperations() = State().monad<Stack>().binding {
-    val a = push("a").bind()
-    val b = pop().bind()
-    val c = pop().bind()
-
-    c
-}.fix()
+val result = addCount(1).runM(2)
+// result: Id(value=Tuple2(a=3, b=3))
 ```
 
 ---
 
-# Interacting with our Stack
+# State :: Transformations
 
-In order to interact with any `Stack`, we need to pass an initial stack value, and then we actually apply our operations to it via the `run` function:
+We can transform __State__ values through several built in functions:
+- map
+- flatMap
+- Monad # binding
+- Applicative # map
 
-```
-stackOperations().run(Nel.of("hello", "world", "!").some())
-// Tuple2(a=Some(NonEmptyList(all=[world, !])), b=Some(hello))
-```
-
-```
-stackOperations().run(Nel.of("hello").some())
-// Tuple2(a=None, b=Some(hello))
-```
-
-If we only care about the resulting String and not the final state, then we can use `runA`:
-
-```
-stackOperations().runA(Nel.of("hello", "world", "!").some())
-// Some(hello)
-```
+---
 
 # State :: map
 
-We can also operate on the results of our `a` without having to run anything on it yet. `map` allows us to transform the resulting value from a change in a `State`, that is: the `A` in our tuple to a different type `B`:
+We can also operate on the results of our `State` without having to run anything on it yet. `map` allows us to transform the resulting value from a change in a `State`, that is: the `A` in our tuple to a different type `B`. In this case we'll transform our `Int` results into `String`:
 
 ```
-stackOperations()
-	.map { value -> value.toInt() }
-	.run(Nel.of("1").some())
-// Tuple2(a=None, b=Some(1))
+val result = addCount(1).runM(2).map { add ->
+	add.toString() + "!" 
+}
+// result: Id(value=Tuple2(a=3, b=3!))
+```
+
+---
+
+# State : flatMap
+
+We can compute multiple operations on `State` instances, combining their resulting values. First let's add a different `State` operation to multiply values:
+
+```
+fun multiplyCount(n: Int): State<Int, Int> = State { acc ->
+    acc * n toT acc * n
+}
+```
+
+We can combine this with the previously defined `addCount` function using `flatMap`:
+
+```
+val result = addCount(1).flatMap { add ->
+    multiplyCount(add)
+}.runM(2)
+// val result = Id(value=Tuple2(a=9, b=9))
+```
+
+---
+
+# State :: Monad binding
+
+Each call to bind() is a coroutine suspended function which will bind to it's value after each `State` has been updated to its new values:
+
+```
+fun bindings(n: Int) = State().monad<Int>().binding {
+    val a = addCount(n).bind()
+    val b = multiplyCount(a).bind()
+    val c = addCount(b).bind()
+
+    c
+}
+
+val result = bindings(2).runM(1)
+// result = Id(value=Tuple2(a=18, b=18))
+```
+
+---
+
+# State :: Applicative Builder
+
+Λrrow contains methods that allow you to combine the results of several subsequent operations over `State`:
+
+```
+val result = State().applicative<Int>().map(addCount(1), addCount(2), multiplyCount(3), { (add1, add2, mult) ->
+    "Combined values: $add1, $add2, $mult"
+}).runM(1)
+// result: Id(value=Tuple2(a=12, b=Combined values: 2, 4, 12))
 ```
 
 ---
@@ -181,7 +127,16 @@ stackOperations()
 - `Applicative`
 - `Functor`
 - `Monad`
-- `MonadState`
+
+---
+
+# State :: Conclusion
+
+- `State` is used to model state and handle its changes in a functional way.
+- We can create `State` instances by defining a function that takes a `State` `S` and returns a tuple combining the future `State` and a resulting value of the operation (`S -> Tuple2<S, A>`).
+- Functions like __map__ and __flatMap__ allow us to transform the resulting value of a `State` and also to combine it with other `State` instances.
+- __State.monad().binding { ... } Comprehensions__ can be used to imperatively define a chain of transformations over a `State` in sequence.
+- __State.applicative().map { ... }__ allows us to combine the results of multiple `State` changes, __abstracting over arity__ with `map`.
 
 ---
 
