@@ -4,29 +4,29 @@ slidenumbers: true
 
 # Kleisli 
 
-__`Kleisli`__ is a data type used in __`Λrrow`__ to model a sequence of chained functions 
+`Kleisli` is a data type used in `Λrrow` to model a sequence of chained functions 
 
-of the shape __`(A) -> F<B>`__ where __`A`__ is the result of a previously executed computation 
+of the shape `(A) -> F<B>` where `A` is the result of a previously executed computation 
 
-and __`F<B>`__ represents any data type that has a type argument such as __`DeferredK`__, __`IO`__, __`ObservableK`__, __`Option`__, etc.
-
----
-
-# Kleisli
-
-__`Kleisli`__ represents an arrow from __`<D>`__ to a monadic value __`Kind<F, A>`__.
-
-That means, when we create a __`Kleisli<Id,Int,Double>`__
-
-we are wrapping a value of __`(Int) -> Id<Double>`__.
+and `F<B>` represents any data type that has a type argument such as `DeferredK`, `IO`, `ObservableK`, `Option`, etc.
 
 ---
 
 # Kleisli
 
-Inside the __`Kleisli`__, we specify the transformation.
+`Kleisli` represents an arrow from `<D>` to a monadic value `Kind<F, A>`.
 
-If we want to transform from the __`Int`__ to the __`Id<Double>`__
+That means, when we create a `Kleisli<Id,Int,Double>`
+
+we are wrapping a value of `(Int) -> Id<Double>`.
+
+---
+
+# Kleisli
+
+Inside the `Kleisli`, we specify the transformation.
+
+If we want to transform from the `Int` to the `Id<Double>`
 
 ```kotlin
 val doubleIdKleisli = Kleisli { number: Int ->
@@ -41,8 +41,8 @@ val doubleId = doubleIdKleisli.run(1)
 
 # Kleisli :: Local
 
-The __`local`__ function allows us to do a conversion on the original input value inside the __`Kleisli`__ before it's executed, 
-creating a __`Kleisli`__ with the input type of the conversion.
+The `local` function allows us to do a conversion on the original input value inside the `Kleisli` before it's executed, 
+creating a `Kleisli` with the input type of the conversion.
 
 ```kotlin
 val k1: Kleisli<ForOption, Int, String> = Kleisli { Some(it.toString()) }
@@ -65,7 +65,7 @@ val composedConfig = configKleisli.run(Config(1,2.0))
 
 # Kleisli :: Ask
 
-The __`ask`__ function creates a __`Kleisli`__ with the same input and output type 
+The `ask` function creates a `Kleisli` with the same input and output type 
 
 inside the monadic context, so you can extract the dependency into a value:
 
@@ -83,9 +83,9 @@ val askOption = askKleisli.run(Config(1,2.0))
 
 # Kleisli :: Map
 
-The __`map`__ function modifies the __`Kleisli`__ output value with a function
+The `map` function modifies the `Kleisli` output value with a function
 
-once the __`Kleisli`__ has been executed.
+once the `Kleisli` has been executed.
 
 ```kotlin
 import arrow.syntax.functor.map
@@ -98,7 +98,7 @@ val mapId = doubleIdKleisli.map { output -> output + 1.0 }.fix().run(1)
 
 # Kleisli :: FlatMap
 
-The __`flatMap`__ function maps the __`Kleisli`__ output into another __`Kleisli`__
+The `flatMap` function maps the `Kleisli` output into another `Kleisli`
  
 with the same input type and monadic context:
 
@@ -117,9 +117,9 @@ val strId = doubleIdKleisli.flatMap({stringIdKleisli},Id.monad()).fix().run(1)
 
 # Kleisli :: AndThen
 
-__`andThen`__ composes the __`Kleisli`__ output.
+`andThen` composes the `Kleisli` output.
 
-It can be used with another __`Kleisli`__ like the flatMap`__ function.
+It can be used with another `Kleisli` like the flatMap` function.
 
 ```kotlin
 import arrow.data.fix
@@ -136,7 +136,7 @@ val doublePlusId = doubleIdKleisli.andThen(doubleOptionKleisli,Option.monad()).f
 
 # Kleisli :: AndThen
 
-With another function like the __`map`__ function:
+With another function like the `map` function:
 
 ```kotlin
 val doublePlusId =doubleIdKleisli.andThen({
