@@ -1,5 +1,5 @@
 autoscale: true
-footer: ![Arrow](arrow-brand-128x128.png) [@raulraja](https://twitter.com/raulraja) [@47deg](https://twitter.com/47deg) :: [Λrrow](http://arrow-kt.io) :: [http://arrow-kt.io/docs/datatypes/state/](http://arrow-kt.io/docs/datatypes/either/)
+footer: ![Arrow](arrow-brand-128x128.png) [@javitaiyou](https://twitter.com/javitaiyou) [@47deg](https://twitter.com/47deg) :: [Λrrow](http://arrow-kt.io) :: [http://arrow-kt.io/docs/datatypes/state/](http://arrow-kt.io/docs/datatypes/state/)
 slidenumbers: true
 
 # State
