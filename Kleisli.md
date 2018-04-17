@@ -113,8 +113,6 @@ The `map` function modifies the `Kleisli` output value with a function
 once the `Kleisli` has been executed.
 
 ```kotlin
-import arrow.syntax.functor.map
-
 val mapOption = doubleOptionKleisli.map(Option.functor()) { output -> output + 1.0 }.fix().run(1)
 //Some(2.0)
 ```
