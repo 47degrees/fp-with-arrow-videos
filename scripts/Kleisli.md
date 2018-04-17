@@ -24,9 +24,9 @@ contains a function which receives, as parameter, an Int and returns the Id<Doub
 
 #Slide 4
 
-We can use the Applicative Builder to create a Kleisli, in this case, 
-we specify the monadic context and the input type.
-This creates a KleisliApplicativeInstance 
+We can use the Applicative Builder to create a Kleisli. 
+In this case, we specify the monadic context and the input type.
+This creates a Kleisli Applicative Instance 
 that we can use to create a Kleisli with functions like `map`.
 We are using `map`, in this case, 
 to get the result of the other two Kleisli and return the sum of both.
