@@ -42,7 +42,7 @@ the Config parameter into an Int or Double, before the Kleisli k1 or k2 is execu
 
 The ask function creates a Kleisli with the same input and output types inside the monadic context.
 So, if we don´t need to change to another output type, 
-we will use local to get the same type inside the monadic context.
+we will use ask to get the same type inside the monadic context.
 
 #Slide 7
 
