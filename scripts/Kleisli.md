@@ -7,13 +7,13 @@ In this video, we're going to learn about the Kleisli data type and what it's us
 #Slide 1
 
 Kleisli is a data type used in Λrrow to model a sequence of chained functions 
-of the shape from A to F<B> 
+of the shape from A to F<B>.
 This allows us to chain transformations of types with a Monadic Context.
 
 #Slide 2
 
 Kleisli represents an arrow from <D> to a monadic value Kind<F, A>.
-That means, inside the Kleisli, we transform the type D into the type A inside F
+That means, inside the Kleisli, we transform the type D into the type A inside F.
 
 #Slide 3
 
@@ -72,7 +72,7 @@ changing the output type and returning a new Kleisli with a new output type.
 
 Or, it can be used to replace the Kleisli result.
 In this case, we ignore the original Kleisli result and only get the specified before.
-This is useful if change the result for one of our transformations 
+This is useful to change the result for one of our transformations 
 and get a new result inside a new Kleisli.
 
 # Final
