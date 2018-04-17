@@ -76,7 +76,7 @@ val k2: Kleisli<ForOption, Double, String> = Kleisli { Some(it.toString()) }
 data class Config(val n: Int, val d: Double)
 
 val configKleisli: Kleisli<ForOption, Config, String> =
-  Kleisli.monad<ForOption, Config>().binding {
+  Kleisli.monad<ForOption, Config>(Option.monad()).binding {
     val a = k1.local<Config> { it.n }.bind()
     val b = k2.local<Config> { it.d }.bind()
     a + b
@@ -95,7 +95,7 @@ The `ask` function creates a `Kleisli` with the same input and output type
 inside the monadic context, so you can extract the dependency into a value:
 
 ```kotlin
-val askKleisli = Kleisli.monad<ForOption, Config>().binding {
+val askKleisli = Kleisli.monad<ForOption, Config>(Option.monad()).binding {
     val (n, d) = Kleisli.ask<ForOption, Config>().bind()
     n + d
   }.fix()
@@ -115,7 +115,7 @@ once the `Kleisli` has been executed.
 ```kotlin
 import arrow.syntax.functor.map
 
-val mapOption = doubleOptionKleisli.map { output -> output + 1.0 }.fix().run(1)
+val mapOption = doubleOptionKleisli.map(Option.functor()) { output -> output + 1.0 }.fix().run(1)
 //Some(2.0)
 ```
 
@@ -134,7 +134,7 @@ val stringOptionKleisli = Kleisli { number: Int ->
   Some(number.toString())
 }
   
-val strOption = doubleOptionKleisli.flatMap({stringOptionKleisli},Option.monad()).fix().run(1)
+val strOption = doubleOptionKleisli.flatMap(Option.monad()) { stringOptionKleisli }.fix().run(1)
 // Some("1.0")
 ```
 
@@ -150,10 +150,10 @@ It can be used with another `Kleisli` like the flatMap` function.
 import arrow.data.fix
 
 val doubleOptionKleisli = Kleisli { number: Double ->
-  Some(number+1.0)
+  Some(number + 1.0)
 }
   
-val doublePlusOption = doubleOptionKleisli.andThen(doubleOptionKleisli,Option.monad()).fix().run(1)
+val doublePlusOption = doubleOptionKleisli.andThen(Option.monad(), doubleOptionKleisli).fix().run(1)
 // Some(2.0)
 ```
 
@@ -164,9 +164,9 @@ val doublePlusOption = doubleOptionKleisli.andThen(doubleOptionKleisli,Option.mo
 With another function like the `map` function:
 
 ```kotlin
-val doublePlusOption =doubleOptionKleisli.andThen({
-  number: Double -> Some(number+1.0)
-}, Option.monad()).fix().run(1)
+val doublePlusOption = doubleOptionKleisli.andThen(Option.monad()) { number: Double ->
+     Some(number + 1.0)
+  }.fix().run(1)
 // Some(2.0)
 ```
 
@@ -177,7 +177,7 @@ val doublePlusOption =doubleOptionKleisli.andThen({
 Or can be used to replace the Kleisli result:
 
 ```kotlin
-val doubleReplaced =doubleOptionKleisli.andThen(Option(2.0), Option.monad()).fix().run(1)
+val doubleReplaced = doubleOptionKleisli.andThen(Option.monad(), Option(2.0)).fix().run(1)
 // Some(2.0)
 ```
 
