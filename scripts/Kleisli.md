@@ -19,8 +19,8 @@ That means, inside the Kleisli, we transform the type D into the type A inside F
 
 Inside the Kleisli, we specify the transformation.
 We can specify a function from the input type to the Monadic context with the output type.
-For example, a Kleisli<Id,Int,Double> 
-the function will receive an Int as parameter and returns the Id<Double>.
+For example, a Kleisli<Id,Int,Double>,
+contains a function which receives, as parameter, an Int and returns the Id<Double>.
 
 #Slide 4
 
