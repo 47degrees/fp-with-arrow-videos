@@ -16,9 +16,9 @@ and `F<B>` represents any data type that has a type argument such as `DeferredK`
 
 `Kleisli` represents an arrow from `<D>` to a monadic value `Kind<F, A>`.
 
-That means, when we create a `Kleisli<Id,Int,Double>`
+That means, when we create a `Kleisli<Option,Int,Double>`
 
-we are wrapping a value of `(Int) -> Id<Double>`.
+we are wrapping a value of `(Int) -> Option<Double>`.
 
 ---
 
@@ -26,15 +26,40 @@ we are wrapping a value of `(Int) -> Id<Double>`.
 
 Inside the `Kleisli`, we specify the transformation.
 
-If we want to transform from the `Int` to the `Id<Double>`
+If we want to transform from the `Int` to the `Option<Double>`
 
 ```kotlin
-val doubleIdKleisli = Kleisli { number: Int ->
-  Id.pure(number.toDouble())
+val doubleOptionKleisli = Kleisli { number: Int ->
+  Some(number.toDouble())
 }
 
-val doubleId = doubleIdKleisli.run(1)
-//Id(1.0)
+val doubleOption = doubleOptionKleisli.run(1)
+//Some(1.0)
+```
+
+---
+
+# Kleisli : Applicative Builder
+
+We can also create a `Kleisli` with binding and the applicative builder
+
+```kotlin
+val intConfigKleisli: Kleisli<ForOption, Config, String> = Kleisli { config: Config -> 
+    Some(config.n.toString()) 
+  }
+  
+val doubleConfigKleisli: Kleisli<ForOption, Config, String> = Kleisli { config: Config -> 
+    Some(config.d.toString()) 
+  }
+
+val doubleOptionKleisli: KleisliApplicativeInstance<ForOption, Config> = 
+  Kleisli.applicative<ForOption, Config>(Option.applicative())
+  .map(intConfigKleisli,doubleConfigKleisli,{
+    it.a + it.b //intConfigKleisli + doubleConfigKleisli 
+  }).fix()
+
+val doubleOption:Option<String> = doubleOptionKleisli.run(Config(1, 2.0))
+//Some(12.0)
 ```
 
 ---
@@ -90,8 +115,8 @@ once the `Kleisli` has been executed.
 ```kotlin
 import arrow.syntax.functor.map
 
-val mapId = doubleIdKleisli.map { output -> output + 1.0 }.fix().run(1)
-//Id(2.0)
+val mapOption = doubleOptionKleisli.map { output -> output + 1.0 }.fix().run(1)
+//Some(2.0)
 ```
 
 ---
@@ -105,12 +130,12 @@ with the same input type and monadic context:
 ```kotlin
 import arrow.data.fix
 
-val stringIdKleisli = Kleisli { number: Int ->
-  Id.pure(number.toString())
+val stringOptionKleisli = Kleisli { number: Int ->
+  Some(number.toString())
 }
   
-val strId = doubleIdKleisli.flatMap({stringIdKleisli},Id.monad()).fix().run(1)
-// Id("1.0")
+val strOption = doubleOptionKleisli.flatMap({stringOptionKleisli},Option.monad()).fix().run(1)
+// Some("1.0")
 ```
 
 ---
@@ -128,7 +153,7 @@ val doubleOptionKleisli = Kleisli { number: Double ->
   Some(number+1.0)
 }
   
-val doublePlusId = doubleIdKleisli.andThen(doubleOptionKleisli,Option.monad()).fix().run(1)
+val doublePlusOption = doubleOptionKleisli.andThen(doubleOptionKleisli,Option.monad()).fix().run(1)
 // Some(2.0)
 ```
 
@@ -139,7 +164,7 @@ val doublePlusId = doubleIdKleisli.andThen(doubleOptionKleisli,Option.monad()).f
 With another function like the `map` function:
 
 ```kotlin
-val doublePlusId =doubleIdKleisli.andThen({
+val doublePlusOption =doubleOptionKleisli.andThen({
   number: Double -> Some(number+1.0)
 }, Option.monad()).fix().run(1)
 // Some(2.0)
@@ -152,8 +177,8 @@ val doublePlusId =doubleIdKleisli.andThen({
 Or can be used to replace the Kleisli result:
 
 ```kotlin
-val doubleReplaced =doubleIdKleisli.andThen(Id(2.0), Id.monad()).fix().run(1)
-// Id(2.0)
+val doubleReplaced =doubleOptionKleisli.andThen(Option(2.0), Option.monad()).fix().run(1)
+// Some(2.0)
 ```
 
 ---

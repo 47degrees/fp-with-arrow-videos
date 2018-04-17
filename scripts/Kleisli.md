@@ -24,42 +24,51 @@ the function will receive an Int as parameter and returns the Id<Double>.
 
 #Slide 4
 
+We can use the Applicative Builder to create a Kleisli, in this case, 
+we specify the monadic context and the input type.
+This creates a KleisliApplicativeInstance 
+that we can use to create a Kleisli with functions like `map`.
+We are using `map`, in this case, 
+to get the result of the other two Kleisli and return the sum of both.
+
+#Slide 5
+
 The local function allows us to do a conversion on the original input value before it's executed, 
 creating a Kleisli with the input type of the conversion and the same context and output type.
 We can create a Kleisli which receives a Config object and uses local to transform 
 the Config parameter into an Int or Double, before the Kleisli k1 or k2 is executed.
 
-#Slide 5
+#Slide 6
 
 The ask function creates a Kleisli with the same input and output types inside the monadic context.
 So, if we don´t need to change to another output type, 
 we will use local to get the same type inside the monadic context.
 
-#Slide 6
+#Slide 7
 
 The map function modifies the Kleisli output value once the Kleisli has been executed.
 Then, returns a new Kleisli with the new output type to continue with more transformations
 
-#Slide 7
+#Slide 8
 
 The flatMap function composes the Kleisli with another Kleisli 
 which must have the same input type as the output type 
 from the first Kleisli and the same monadic context to create a new one,
 with the initial input type and monadic context and the second kleisli output type.
 
-#Slide 8
+#Slide 9
 
 The andThen function composes the Kleisli output.
 We have a few ways to use andThen.
 It can be used with another Kleisli like the flatMap function, 
 and return another Kleisli.
 
-#Slide 9
+#Slide 10
 
 With another function like the map function, 
 changing the output type and returning a new Kleisli with a new output type.
 
-#Slide 10
+#Slide 11
 
 Or, it can be used to replace the Kleisli result.
 In this case, we ignore the original Kleisli result and only get the specified before.
