@@ -4,13 +4,13 @@ slidenumbers: true
 
 # EitherT
 
-__`EitherT`__ is a data type used in __Λrrow__ when we want to compute an Either that is nested inside another monad.
+__`EitherT`__ is a data type used in __Λrrow__ for computing an Either that is nested inside another monad.
 
 ---
 
 # EitherT
 
-We can use `EitherT` when we find ourselves with an `Either` value nested inside any other
+We can use `EitherT` when we find ourselves with an `Either` value nested inside another
 effect.
 
 ```kotlin
@@ -34,7 +34,7 @@ val eitherInIO: IO<Either<StringToNumberError, Int>> = IO( {Either.right(1) })
 
 # EitherT
 
-We can construct `EitherT` instances by wrapping existing `F<Either<E, A>>` values
+We can construct `EitherT` instances by wrapping existing `F<Either<E, A>>` values:
 
 ```kotlin
 val eitherTDeferred: EitherT<ForDeferredK, StringToNumberError, Int> = EitherT(async { Either.right(1) }.k())
@@ -46,7 +46,7 @@ val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.righ
 
 # EitherT :: fold
 
-__fold__ contemplates both __Left__ and __Right__ cases inside the nested effect
+__fold__ contemplates both __Left__ and __Right__ cases inside the nested effect:
 
 ```kotlin
 val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(99)})
@@ -58,7 +58,7 @@ eitherTIO.fold(IO.functor(), { "There was an error" }, { it })
 
 # EitherT :: fold
 
-The second argument is a function that addresses the __Left__ case
+The second argument is a function that addresses the __Left__ case:
 
 ```kotlin
 val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{ stringToInt("a")})
@@ -70,7 +70,7 @@ eitherTIO.fold(IO.functor(), { "There was an error" }, { it })
 
 # EitherT :: fold
 
-The third argument is a function that addresses the __Right__ case
+The third argument is a function that addresses the __Right__ case:
 
 ```kotlin
 val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(99)})
@@ -82,7 +82,7 @@ eitherTIO.fold(IO.functor(), { "There was an error" }, { it })
 
 # EitherT :: map
 
-__map__ allows us to transform __A__ into __B__ in __F<Either<E, A>>__
+__map__ allows us to transform __A__ into __B__ in __F<Either<E, A>>__:
 
 ```kotlin
 val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(99)})
@@ -95,7 +95,7 @@ eitherTIO.map(IO.functor()) { it + 1 }
 
 # EitherT :: map
 
-When we __map__ over __EitherT__ values that are a __Left__ the transformation is never applied and __Left__ is returned
+When we __map__ over __EitherT__, values that are __Left__ in the transformation are never applied and __Left__ is returned:
 
 ```kotlin
 val eitherTIO: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.left(StringToNumberError("not good"))})
@@ -108,7 +108,7 @@ EitherTIO.map(IO.functor()) { it + 1 }
 
 # EitherT :: flatMap
 
-__flatMap__ allows us to compute over the contents of multiple __EitherT<E, * >__ values
+__flatMap__ allows us to compute over the contents of multiple __EitherT<E, * >__ values:
 
 ```kotlin
 val a: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(1)})
@@ -148,7 +148,7 @@ EitherT.monad<ForIO, StringToNumberError>(IO.monad()).binding {
 
 # EitherT :: Monad binding
 
-Each call to __bind()__ is a coroutine suspended function which will bind to it's value only if the __EitherT__ is a __IO(Left)__
+Each call to __bind()__ is a coroutine suspended function which will bind to it's value only if the __EitherT__ is a __IO(Left)__:
 
 ```kotlin
 val a: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(1)})
@@ -168,7 +168,7 @@ EitherT.monad<ForIO, StringToNumberError>(IO.monad()).binding {
 
 # EitherT :: Monad binding
 
-If any of the values is __Left__, __bind()__ will shortcircuit yielding __Left__
+If any of the values are __Left__, __bind()__ will shortcircuit yielding __Left__:
 
 ```kotlin
 val a: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(1)})
@@ -208,17 +208,17 @@ EitherT.applicative<ForIO, Throwable>(IO.monad()).map(eitherTId, eitherTName, ei
 
 # EitherT :: Conclusion
 
-- EitherT is __used to model computations with two possible results, the Left and the Right__
-- __fold__, __map__, __flatMap__ and others are used to compute over the internal contents of an EitherT value.
+- EitherT is __used to model computations with two possible results, the Left and the Right__.
+- __fold__, __map__, __flatMap__, and others are used to compute over the internal contents of an EitherT value.
 - __EitherT.monad(F.monad()).binding { ... } Comprehensions__ can be __used to imperatively compute__ over multiple EitherT values in sequence.
-- __EitherT.applicative(F.monad()).map { ... }__ can be used to compute over multiple EitherT values preserving type information and __abstracting over arity__ with `map`
+- __EitherT.applicative(F.monad()).map { ... }__ can be used to compute over multiple EitherT values preserving type information and __abstracting over arity__ with `map`.
 
 ---
 
 # EitherT :: Conclusion
 
-- __All techniques demonstrated are also available to other data types__ such as `Try`, `Either`, `IO` and you can build adapters for any data types
-- We can learn more about other data types like `Try`, `Either`, `IO` and type classes that power these abstraction such as `Functor`, `Applicative` and `Monad` in other videos.
+- __All techniques demonstrated are also available to use with other data types__ such as `Try`, `Either`, `IO` and you can build adapters for any data type.
+- We can learn more about other data types like `Try`, `Either`, `IO` and the type classes that power these abstractions such as `Functor`, `Applicative`, and `Monad` in other videos.
 - __Λrrow encourages a unified programming model__ in which you can solve problems cohesively in all contexts following Typed Functional Programming principles applied to the Kotlin Programming Language.
 
 ---
