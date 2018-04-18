@@ -52,8 +52,7 @@ Then, returns a new Kleisli with the new output type to continue with more trans
 #Slide 8
 
 The flatMap function composes the Kleisli with another Kleisli 
-which must have the same input type as the output type 
-from the first Kleisli and the same monadic context to create a new one,
+which must have the same input type as the first Kleisli and the same monadic context to create a new one,
 with the initial input type and monadic context and the second kleisli output type.
 
 #Slide 9
