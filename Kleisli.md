@@ -16,9 +16,9 @@ and `F<B>` represents any data type that has a type argument such as `DeferredK`
 
 `Kleisli` represents an arrow from `<D>` to a monadic value `Kind<F, A>`.
 
-That means, when we create a `Kleisli<Option,Int,Double>`
+That means, when we create a `Kleisli<Id,Int,Double>`
 
-we are wrapping a value of `(Int) -> Option<Double>`.
+we are wrapping a value of `(Int) -> Id<Double>`.
 
 ---
 
@@ -26,14 +26,14 @@ we are wrapping a value of `(Int) -> Option<Double>`.
 
 Inside the `Kleisli`, we specify the transformation.
 
-If we want to transform from the `Int` to the `Option<Double>`
+If we want to transform from the `Int` to the `Id<Double>`
 
 ```kotlin
-val doubleOptionKleisli = Kleisli { number: Int ->
-  Some(number.toDouble())
+val doubleIdKleisli = Kleisli { number: Int ->
+  Id.pure(number.toDouble())
 }
 
-val doubleOption = doubleOptionKleisli.run(1)
+val doubleOption = doubleIdKleisli.run(1)
 //Some(1.0)
 ```
 
