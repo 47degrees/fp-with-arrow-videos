@@ -6,7 +6,8 @@ Welcome to the series of videos about functional programming in Kotlin with Arro
 ```
 Reader
 
-Reader is a higher kinded wrapper around a function. This function will be ran at some point in the future, when we can provide a proper execution context for it.
+Reader is a higher kinded wrapper around a function that goes from A to B (A) -> B.
+This function will be ran at some point in the future, when we can provide a proper execution context for it.
 
 An execution context could be an input value, a service instance, or any other resource that the funtion could need to be ran.
 
@@ -52,14 +53,14 @@ Reader can be instantiated in three different ways.
 ```
 Reader :: using its constructor
 
-val readerInstance1: Reader<Int, String> = readerFun.reader()
+val readerInstance1: Reader<Int, String> = charExists.reader()
 ```
 
 #Slide 6
 ```
 Reader :: from a ReaderFun
 
-val readerInstance2: Reader<Int, String> = Reader(readerFun)
+val readerInstance2: Reader<Int, String> = Reader(charExists)
 
 ```
 
@@ -134,13 +135,10 @@ val countCharReader = countChars().reader()
 Reader :: Monad binding
 
     val bindingReader: Reader<CharContext, String> =
-      Reader()
-        .monad<CharContext>()
-        .binding {
-            val a = charExistsReader.bind()
-            removeCharReader(a).bind()
-        }
-      .fix()
+      Reader().monad<CharContext>().binding {
+        val a = charExistsReader.bind()
+        removeCharReader(a).bind()
+      }.fix()
 ```
 
 # Slide 14
@@ -160,17 +158,16 @@ val listReader = generateList().reader()
 ```
 
 val applicativeReader: Reader<CharContext, ProcessedResult> =
-   Reader()
-     .applicative<CharContext>()
+   Reader().applicative<CharContext>()
      .map(countCharReader, listReader, { (charOccurrences, randomList) ->
          ProcessedResult(charOccurrences, randomList)
-     })
-     .fix()
+     }).fix()
 
 ```
 
 # Final
 
-In this video, we learned about Reader and the different methods to create it and deal with it. We learned about bind, combine, fold, map and flatMap a Reader.
+In this video, we learned about Reader and the different methods to create it and compose programs based on Reader values. We learned about binding, combine, fold, map and flatMap.
 
-We'll learn more about those in the next episode. Thanks for watching.
+We'll learn more about other data types that share similar API's. Thanks for watching.
+
