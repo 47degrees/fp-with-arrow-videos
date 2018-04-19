@@ -35,85 +35,138 @@ ReaderFun
 
 The function that Reader postpons is called `Computation` and has the form of (D) -> A, where D represents a Dependency. This computation is defined as an alias called `ReaderFun`.
 
-val readerFun: ReaderFun<Int, String> = { input: Int -> input.toString() }
-```
-
-# Slide 4
-```
-Reader
-
-Reader can be instantiated from:
-
-- its constructor, where `run` is ReaderFun:
-
-val reader1: Reader<Int, String> = readerFun.reader()
-
-- from a ReaderFun computation:
-
-val readerValue2: Reader<Int, String> = Reader(readerFun)
-
-- or inline:
-
-val readerValue3: Reader<Int, String> = Reader {
-    it.toString()
+fun charExists(): ReaderFun<CharContext, Boolean> = { ctx ->
+    ctx.source.contains(ctx.searchChar)
 }
 ```
 
 # Slide 4
+```
+Reader :: Instantiation
+
+Reader can be instantiated in three different ways.
+
+```
+
+# Slide 5
+```
+Reader :: using its constructor
+
+val readerInstance1: Reader<Int, String> = readerFun.reader()
+```
+
+#Slide 6
+```
+Reader :: from a ReaderFun
+
+val readerInstance2: Reader<Int, String> = Reader(readerFun)
+
+```
+
+#Slide 7
+```
+
+Reader :: Inline
+
+val readerInstance3: Reader<CharContext, String> = Reader { ctx ->
+    ctx.source.contains(ctx.searchChar)
+}
+```
+
+# Slide 8
 ```
 Reader :: Dependency Injection
 
 One of the most useful uses of the Reader monad is dependency injection since we can postpone the execution of a function until we have a resource available.
 ````
 
-# Slide 5
+# Slide 9
 ```
 Let’s establish a couple of functions to see how it works.
 
-data class Context(val greeting: String, val times: Int)
+data class CharContext(val source: String, val searchChar: Char, val replacement: Char)
 
-fun greetingMessage(name: String): Reader<Context, String> = Reader {
-    "${it.greeting}, $name."
+fun charExists(): ReaderFun<CharContext, Boolean> = { ctx ->
+    ctx.source.contains(ctx.searchChar)
 }
 
-fun printGreeting(message: String): ReaderFun<Context, Unit> = {
-    for (x in 0..it.times) {
-        println(message)
-    }
-}
+val charExistsReader = charExists().reader()
 
 The Reader monad will defer the execution of these functions until we call the `run` method by specifying a Context instance as a parameter.
 ```
 
-# Slide 6
+# Slide 10
 ```
-We can additionally combine them into a single Reader instance:
+Reader :: map
 
-fun salute(name: String): Reader<Context, Unit> = Reader {
-    greetingMessage(name).run(it).flatMap { message ->
-        printGreeting(message)
-    }
+val accesingReader: Reader<CharContext, Int> =
+  charExistsReader.map {
+    if (it) 1 else 0
+  }
+```
+
+# Slide 11
+```
+Reader :: flatMap
+
+val composedReader: Reader<CharContext, String> =
+  charExistsReader.flatMap {
+    removeCharReader(it)
 }
 ```
 
-# Slide 7
-```
-Reader :: map
-```
-
-# Slide 8
-```
-Reader :: flatMap
-```
-
-# Slide 9
+# Slide 12
 ```
 Reader :: Monad binding
+
+For this usage example, we are going to define a new reader:
+
+fun countChars(): ReaderFun<CharContext, Int> = { ctx ->
+    ctx.source.count { it.toLowerCase() == ctx.searchChar.toLowerCase() }
+}
+
+val countCharReader = countChars().reader()
+
 ```
 
-# Slide 10
+# Slide 13
 ```
-Reader :: AndThen
+Reader :: Monad binding
+
+    val bindingReader: Reader<CharContext, String> =
+      Reader()
+        .monad<CharContext>()
+        .binding {
+            val a = charExistsReader.bind()
+            removeCharReader(a).bind()
+        }
+      .fix()
+```
+
+# Slide 14
+```
+Reader :: Applicative Builder
+
+Let's define a couple of more functions to ilustrate the Application Builder
+
+fun generateList(): ReaderFun<CharContext, List<Int>> = { ctx ->
+    List(ctx.source.length, { x -> Random(x.toLong()).nextInt() })
+}
+
+val listReader = generateList().reader()
+```
+
+# Slike 15
+```
+
+val applicativeReader: Reader<CharContext, ProcessedResult> =
+   Reader()
+     .applicative<CharContext>()
+     .map(countCharReader, listReader, { (charOccurrences, randomList) ->
+         ProcessedResult(charOccurrences, randomList)
+     })
+     .fix()
+
 ```
 
 # Final
