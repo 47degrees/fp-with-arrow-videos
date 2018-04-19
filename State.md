@@ -4,7 +4,7 @@ slidenumbers: true
 
 # State
 
-`State` is a structure that provides a functional approach to handling application state. `State<S, A> is basically a function `S -> Tuple2(S, A)`, where `S` is the type that represents your state and `A` is the result the function produces. In addition to returning the result of type `A`, the function returns a new `S` value, which is the updated state.
+`State` is a structure that provides a functional approach to handling application state. `State<S, A>` is basically a function `S -> Tuple2(S, A)`, where `S` is the type that represents your state and `A` is the result the function produces. In addition to returning the result of type `A`, the function returns a new `S` value, which is the updated state.
 
 ---
 
@@ -56,7 +56,7 @@ We can transform __State__ values through several built in functions:
 
 # State :: map
 
-We can also operate on the results of our `State` without having to run anything on it yet. `map` allows us to transform the resulting value from a change in a `State`, that is: the `A` in our tuple to a different type `B`. In this case we'll transform our `Int` results into `String`:
+We can operate on the results of our `State` without having to run anything on it yet. `map` allows us to transform the resulting value from a change in a `State`, that is: the `A` in our tuple to a different type `B`. In this case we'll transform our `Int` results into `String`:
 
 ```
 val result = addCount(1).runM(2).map { add ->
