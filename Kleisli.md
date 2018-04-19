@@ -4,19 +4,19 @@ slidenumbers: true
 
 # Kleisli 
 
-__`Kleisli`__ is a data type used in __Λrrow__ to model a sequence of chained functions 
+`Kleisli` is a data type used in `Λrrow` to model a sequence of chained functions 
 
-of the shape `(A) -> F<B>` where A is the result of a previously executed computation 
+of the shape `(A) -> F<B>` where `A` is the result of a previously executed computation 
 
-and `F<B>` represents any data type that has a type argument such as `DeferredK`, `IO`, `ObservableK`, `Option`, etc. 
+and `F<B>` represents any data type that has a type argument such as `DeferredK`, `IO`, `ObservableK`, `Option`, etc.
 
 ---
 
 # Kleisli
 
-__`Kleisli`__ represents an arrow from __`<D>`__ to a monadic value __`Kind<F, A>`__.
+`Kleisli` represents an arrow from `<D>` to a monadic value `Kind<F, A>`.
 
-That means, when we create a `Kleisli<Id,Int,Double>` 
+That means, when we create a `Kleisli<Id,Int,Double>`
 
 we are wrapping a value of `(Int) -> Id<Double>`.
 
@@ -33,15 +33,41 @@ val doubleIdKleisli = Kleisli { number: Int ->
   Id.pure(number.toDouble())
 }
 
-val doubleId = doubleIdKleisli.run(1)
-//Id(1.0)
+val doubleOption = doubleIdKleisli.run(1)
+//Some(1.0)
+```
+
+---
+
+# Kleisli : Applicative Builder
+
+We can also create a `Kleisli` with binding and the applicative builder
+
+```kotlin
+val intConfigKleisli: Kleisli<ForOption, Config, String> = Kleisli { config: Config -> 
+    Some(config.n.toString()) 
+  }
+  
+val doubleConfigKleisli: Kleisli<ForOption, Config, String> = Kleisli { config: Config -> 
+    Some(config.d.toString()) 
+  }
+
+val doubleOptionKleisli: KleisliApplicativeInstance<ForOption, Config> = 
+  Kleisli.applicative<ForOption, Config>(Option.applicative())
+  .map(intConfigKleisli,doubleConfigKleisli,{
+    it.a + it.b //intConfigKleisli + doubleConfigKleisli 
+  }).fix()
+
+val doubleOption:Option<String> = doubleOptionKleisli.run(Config(1, 2.0))
+//Some(12.0)
 ```
 
 ---
 
 # Kleisli :: Local
 
-The __`local`__ function allows us to do a conversion on the original input value inside the `Kleisli` before it's executed, creating a `Kleisli` with the input type of the conversion.
+The `local` function allows us to do a conversion on the original input value inside the `Kleisli` before it's executed, 
+creating a `Kleisli` with the input type of the conversion.
 
 ```kotlin
 val k1: Kleisli<ForOption, Int, String> = Kleisli { Some(it.toString()) }
@@ -50,7 +76,7 @@ val k2: Kleisli<ForOption, Double, String> = Kleisli { Some(it.toString()) }
 data class Config(val n: Int, val d: Double)
 
 val configKleisli: Kleisli<ForOption, Config, String> =
-  Kleisli.monad<ForOption, Config>().binding {
+  Kleisli.monad<ForOption, Config>(Option.monad()).binding {
     val a = k1.local<Config> { it.n }.bind()
     val b = k2.local<Config> { it.d }.bind()
     a + b
@@ -63,12 +89,13 @@ val composedConfig = configKleisli.run(Config(1,2.0))
 ---
 
 # Kleisli :: Ask
+
 The `ask` function creates a `Kleisli` with the same input and output type 
 
 inside the monadic context, so you can extract the dependency into a value:
 
 ```kotlin
-val askKleisli = Kleisli.monad<ForOption, Config>().binding {
+val askKleisli = Kleisli.monad<ForOption, Config>(Option.monad()).binding {
     val (n, d) = Kleisli.ask<ForOption, Config>().bind()
     n + d
   }.fix()
@@ -86,15 +113,14 @@ The `map` function modifies the `Kleisli` output value with a function
 once the `Kleisli` has been executed.
 
 ```kotlin
-import arrow.syntax.functor.map
-
-val mapId = doubleIdKleisli.map { output -> output + 1.0 }.fix().run(1)
-//Id(2.0)
+val mapOption = doubleOptionKleisli.map(Option.functor()) { output -> output + 1.0 }.fix().run(1)
+//Some(2.0)
 ```
 
 ---
 
 # Kleisli :: FlatMap
+
 The `flatMap` function maps the `Kleisli` output into another `Kleisli`
  
 with the same input type and monadic context:
@@ -102,30 +128,30 @@ with the same input type and monadic context:
 ```kotlin
 import arrow.data.fix
 
-val stringIdKleisli = Kleisli { number: Int ->
-  Id.pure(number.toString())
+val stringOptionKleisli = Kleisli { number: Int ->
+  Some(number.toString())
 }
   
-val strId = doubleIdKleisli.flatMap({stringIdKleisli},Id.monad()).fix().run(1)
-// Id("1.0")
+val strOption = doubleOptionKleisli.flatMap(Option.monad()) { stringOptionKleisli }.fix().run(1)
+// Some("1.0")
 ```
 
 ---
 
 # Kleisli :: AndThen
 
-__`andThen`__ composes the `Kleisli` output.
+`andThen` composes the `Kleisli` output.
 
-It can be used with another `Kleisli` like the `flatMap` function.
+It can be used with another `Kleisli` like the flatMap` function.
 
 ```kotlin
 import arrow.data.fix
 
 val doubleOptionKleisli = Kleisli { number: Double ->
-  Some(number+1.0)
+  Some(number + 1.0)
 }
   
-val doublePlusId = doubleIdKleisli.andThen(doubleOptionKleisli,Option.monad()).fix().run(1)
+val doublePlusOption = doubleOptionKleisli.andThen(Option.monad(), doubleOptionKleisli).fix().run(1)
 // Some(2.0)
 ```
 
@@ -136,9 +162,9 @@ val doublePlusId = doubleIdKleisli.andThen(doubleOptionKleisli,Option.monad()).f
 With another function like the `map` function:
 
 ```kotlin
-val doublePlusId =doubleIdKleisli.andThen({
-  number: Double -> Some(number+1.0)
-}, Option.monad()).fix().run(1)
+val doublePlusOption = doubleOptionKleisli.andThen(Option.monad()) { number: Double ->
+     Some(number + 1.0)
+  }.fix().run(1)
 // Some(2.0)
 ```
 
@@ -146,20 +172,12 @@ val doublePlusId =doubleIdKleisli.andThen({
 
 # Kleisli :: AndThen
 
-Or can be used to replace the `Kleisli` result:
+Or can be used to replace the Kleisli result:
 
 ```kotlin
-val doubleReplaced =doubleIdKleisli.andThen(Id(2.0), Id.monad()).fix().run(1)
-// Id(2.0)
+val doubleReplaced = doubleOptionKleisli.andThen(Option.monad(), Option(2.0)).fix().run(1)
+// Some(2.0)
 ```
-
----
-
-# Kleisli :: Conclusion
-
-__`Kleisli`__ is really useful for encapsulating a transformation 
-
-which returns a Monadic value or concatenates them.
 
 ---
 
