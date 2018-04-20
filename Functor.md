@@ -15,8 +15,8 @@ import arrow.typeclasses.Functor
 ```
 
 # Slide 2
-`Functor` is a **Typeclass**, so it defines a behavior.
-`Applicative` and `Monad` inherit its properties. You will learn more about those
+`Functor` is a **Typeclass**, so it defines a given behavior.
+`Applicative` and `Monad` inherit its combninators. You will learn more about those
 in further videos.
 
 Functor
@@ -32,7 +32,7 @@ interface Functor<F> {
 * The `F` on the declaration stands for a **type constructor**. That's why `Functor`is considered **polymorphic**.
 
 # Slide 4
-The `Functor` abstracts the hability to **map** over the computational context of a type constructor `F`.
+`Functor` abstracts the hability to **map** over the computational context of a type constructor `F`.
 In other words, it provides a mapping function for the `F` type:
 ```
 fun F<A>.map(f: (A) -> B): F<B>
@@ -42,7 +42,7 @@ fun F<A>.map(f: (A) -> B): F<B>
 ```
 fun F<A>.map(f: (A) -> B): F<B>
 ```
-* `f` is the function transform the wrapped value.
+* `f` is the function transforming the wrapped value.
 * `map()` returns the transformed value wrapped into the same context: `F<A> -> F<B>`
 
 # Slide 6
@@ -64,7 +64,7 @@ IO.functor()
 ```
 
 # Slide 8
-See an example on how to map over some Optional data.
+Here you have an example on how to map over some Optional data.
 ```
 import arrow.*
 import arrow.core.*
@@ -73,22 +73,23 @@ import arrow.data.*
 Option(1).map { it * 2 }
 // Some(2)
 ```
-Here `f` is `{ it *  2}`, which will transform the inner data.
+Here `f` is `{ it *  2 }`, which will transform the inner data.
 
 # Slide 9
-Sometimes mapping the value just makes sense over one of the implementations of a data type. One exmaple of this is the `Option<A>` type.
+Sometimes mapping the value just makes sense over one of the implementations of a data type. One exmaple of this is the `Option` type.
 
-As you know, Option is defined like:
+As you know, `Option` is defined like:
 ```
 sealed class Option<A> {
   object None : Option<Nothing>()
   data class Some<T>(val t: T) : Option<T>()
 }
 ```
+So it has two different implementations.
 
 # Slide 10
-`Option` just contains a value when it is a `Some<A>`. So we can just `map` its content when it's a `Some`.
-Because of that, we say that `Option` is a *"biased"* to one of its implementations.
+`Option` just contains a value when its type is `Some<A>`. So we can `map` over its content just for that case.
+Because of that, we say that `Option` is a *"biased"* to the case when it contains an actual value.
 
 ```
 val some: Option<Int> = Option(1)
@@ -111,7 +112,7 @@ sealed class Try<out A> {
 ```
 
 # Slide 12
-`Try` is biased to its `Success` implementation, so map just works over it. Otherwise it short-circuits the error:
+`Try` is biased to its `Success` implementation, so map just works over that one. Otherwise it short-circuits the error:
 ```
 val failingOp = Try { failingOperation() }
 // Failure(exception=java.lang.RuntimeException)
@@ -135,7 +136,7 @@ The `Functor` also provides the `lift` combinator to lift a function to the func
 ```
 fun lift(f: (A) -> B): (F<A>) -> F<B>
 ```
-So you can apply it over values wrapped in the same data type context.
+Thanks to this you can apply it over values wrapped in the same data type context.
 ```
 val lifted = Option.functor().lift({ n: Int -> n + 1 })
 val next = lifted(Option(1))
