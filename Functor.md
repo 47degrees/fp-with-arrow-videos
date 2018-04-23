@@ -98,12 +98,14 @@ So it has two different implementations.
 Because of that, we say `Option` is *"biased"* toward the `Some` case.
 
 ```
-val some: Option<Int> = Option(1)
-some.map { it + 1 }
-// Some(2)
+// defining abstract program
+fun <F> Functor<F>.increment(fa: Kind<F, Int>): Kind<F, Int> =
+  fa.map { it + 1 }
 
-val none: Option<Int> = None
-none.map { it + 1 }
+// Let's make it concrete
+Option.functor().increment(Option(1)).fix()
+// Some(2)
+Option.functor().increment(None).fix()
 // None
 ```
 As you can see, the computation gets short-circuited when it's a `None`.
@@ -121,24 +123,19 @@ sealed class Try<out A> {
 # Slide 12
 `Try` is biased toward its `Success` case, so map just works over that one. Otherwise it short-circuits the error:
 ```
-val failingOp = Try { failingOperation() }
-// Failure(exception=java.lang.RuntimeException)
+// defining abstract program
+fun <F> Functor<F>.increment(fa: Kind<F, Int>): Kind<F, Int> =
+  fa.map { it + 1 }
 
-failingOp.map { it * 2 }
+// Let's make it concrete
+Try.functor().increment(Try { 1 }).fix()
+// Success(value=2)
+
+Try.functor().increment(Try { throw RuntimeException() }).fix()
 // Failure(exception=java.lang.RuntimeException)
 ```
 
 # Slide 13
-This is how it looks when it's a `Success`.
-```
-val successfulOp = Try { successfulOp() }
-// Success(value=10)
-
-val mappedSuccessfulOp = successfulOp.map { it * 2 }
-// Success(value=20)
-```
-
-# Slide 14
 The `Functor` also provides the `lift` combinator to lift a function to the functor context.
 ```
 fun lift(f: (A) -> B): (F<A>) -> F<B>
