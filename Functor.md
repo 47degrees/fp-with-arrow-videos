@@ -56,8 +56,7 @@ Any type constructor whose contents can be transformed can provide an instance o
 * ...and many more.
 
 # Slide 7
-Using Typeclasses you can define completely polymorphic programs that can work over any data types
-providing an instance of `Functor`. This is actually the biggest power Typeclasses have.
+Using Typeclasses you can define completely polymorphic programs that can work over any data types providing an instance of `Functor`. This is actually the biggest power Typeclasses have.
 ```
 // Abstract program, we just know we need a Functor
 fun <F> Functor<F>.addOne(fa: Kind<F, Int>): Kind<F, Int> =
