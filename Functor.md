@@ -29,7 +29,9 @@ interface Functor<F> {
     //...
 }
 ```
-* The `F` on the declaration stands for a **type constructor**. That's why `Functor`is considered **polymorphic**.
+* Functor is parametric over a type constructor `F`. This allows us to build abstract functions over the behaviors that Functor defines and forgetting about the concrete types that F may refer to.
+
+* We call this **ad-hoc polymorphism**, the ability to write polymorphic programs that can be defined in generic terms.
 
 # Slide 4
 `Functor` abstracts the hability to **map** over the computational context of a type constructor `F`.
@@ -54,14 +56,18 @@ Any type constructor whose contents can be transformed can provide an instance o
 * ...and many more.
 
 # Slide 7
-You can request the functor instance statically from any type constructor supporting it:
+Using Typeclasses you can define completely polymorphic programs that can work over any data types
+providing an instance of `Functor`. This is actually the biggest power Typeclasses have.
 ```
-Option.functor()
-Try.functor()
-Either.functor<A>()
-IO.functor()
-//...
+// Abstract program, we just know we need a Functor
+fun <F> Functor<F>.addOne(fa: Kind<F, Int>): Kind<F, Int> =
+  fa.map { it + 1 }
+
+// Making it concrete for Option and Try
+Option.functor().addOne(Option(1)).fix() // Option(2)
+Try.functor().addOne(Try { 1 }).fix() // Success(2)
 ```
+Look at how we declare the abstract program first and we make it concrete afterwards for two different data types: `Option` and `Try`.
 
 # Slide 8
 Here you have an example on how to map over some Optional data.
@@ -89,7 +95,7 @@ So it has two different implementations.
 
 # Slide 10
 `Option` just contains a value when its type is `Some<A>`. So we can `map` over its content just for that case.
-Because of that, we say that `Option` is a *"biased"* to the case when it contains an actual value.
+Because of that, we say `Option` is *"biased"* toward the `Some` case.
 
 ```
 val some: Option<Int> = Option(1)
@@ -100,10 +106,11 @@ val none: Option<Int> = None
 none.map { it + 1 }
 // None
 ```
-As you can see, the error gets short-circuited when it's a `None`.
+As you can see, the computation gets short-circuited when it's a `None`.
 
 # Slide 11
-Same thing happens for other data types like `Try<A>`. `Try` wraps a potentially throwing computation, and it is defined like:
+Same thing happens for other data types like `Try<A>`. `Try` models safe access to API's that may throw exceptions,
+and it is defined like:
 ```
 sealed class Try<out A> {
   data class Success<out A>(val value: A) : Try<A>()
@@ -112,7 +119,7 @@ sealed class Try<out A> {
 ```
 
 # Slide 12
-`Try` is biased to its `Success` implementation, so map just works over that one. Otherwise it short-circuits the error:
+`Try` is biased toward its `Success` case, so map just works over that one. Otherwise it short-circuits the error:
 ```
 val failingOp = Try { failingOperation() }
 // Failure(exception=java.lang.RuntimeException)
