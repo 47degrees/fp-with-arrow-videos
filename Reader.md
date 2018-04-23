@@ -38,6 +38,9 @@ import arrow.data.Reader
 The function that __`Reader`__ postpons is called `Computation` and has the form of `(D) -> A`, where `D` represents a Dependency. This computation is defined as an alias called __`ReaderFun`__.
 
 ```kotlin
+
+data class CharContext(val source: String, val searchChar: Char, val replacement: Char)
+
 fun charExists(): ReaderFun<CharContext, Boolean> = { ctx ->
     ctx.source.contains(ctx.searchChar)
 }
@@ -97,7 +100,18 @@ val accesingReader: Reader<CharContext, Int> =
 
 # Reader :: flatMap
 
-__flatMap__ allows us to compute over the contents of multiple __Reader<D, *>__ values, where they need to have the same `Dependency`
+__flatMap__ allows us to compute over the contents of multiple __Reader<D, *>__ values, where they need to have the same `Dependency`.
+
+Let's define a new Reader:
+
+```kotlin
+fun removeCharReader(remove: Boolean): Reader<CharContext, String> = Reader { ctx ->
+    if (remove) ctx.source.replace(ctx.searchChar, ctx.replacement, true)
+    else ctx.source
+}
+```
+
+We can combine this with the previously defined charExistsReader function using flatMap:
 
 ```kotlin
 val composedReader: Reader<CharContext, String> =
