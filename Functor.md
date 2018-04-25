@@ -1,8 +1,6 @@
 # Intro
 
-Welcome to this series of videos about Functional Programming in Kotlin with Arrow. In this video, we will talk about the
-Functor Typeclass. Whenever you find yourself in a situation where you need to map over or transform your data, you will want
-to use the Functor.
+Welcome to this series of videos about Functional Programming in Kotlin with Arrow. In this video, we will talk about the Functor Typeclass. Whenever you find yourself in a situation where you need to map over or transform your data, you will want to use the Functor.
 
 # Slide 1
 Functor is available in the arrow-typeclasses module.
@@ -15,9 +13,7 @@ import arrow.typeclasses.Functor
 ```
 
 # Slide 2
-`Functor` is a **Typeclass**, so it defines a given behavior.
-`Applicative` and `Monad` inherit its combninators. You will learn more about those
-in further videos.
+`Functor` is a **Typeclass**, so it defines a given behavior. `Applicative` and `Monad` inherit its combninators. You will learn more about those in further videos.
 
 Functor
 Applicative
@@ -81,16 +77,13 @@ Option(1).map { it * 2 }
 Here `f` is `{ it *  2 }`, which will transform the inner data.
 
 # Slide 9
-Sometimes mapping the value just makes sense over one of the implementations of a data type. One exmaple of this is the `Option` type.
-
-As you know, `Option` is defined like:
+Sometimes mapping the value just makes sense over one of the implementations of a data type. One exmaple of this is the `Option` type, with two different implementations:
 ```
 sealed class Option<A> {
   object None : Option<Nothing>()
   data class Some<T>(val t: T) : Option<T>()
 }
 ```
-So it has two different implementations.
 
 # Slide 10
 `Option` just contains a value when its type is `Some<A>`. So we can `map` over its content just for that case.
@@ -110,8 +103,7 @@ Option.functor().increment(None).fix()
 As you can see, the computation gets short-circuited when it's a `None`.
 
 # Slide 11
-Same thing happens for other data types like `Try<A>`. `Try` models safe access to API's that may throw exceptions,
-and it is defined like:
+Same thing happens for other data types like `Try<A>`. `Try` models safe access to API's that may throw exceptions:
 ```
 sealed class Try<out A> {
   data class Success<out A>(val value: A) : Try<A>()
@@ -145,6 +137,38 @@ val lifted = Option.functor().lift({ n: Int -> n + 1 })
 val next = lifted(Option(1))
 // Some(2)
 ```
+
+# Slide 14
+Any Typeclass **must satisfy some mathematical laws** in order to be considered a Typeclass. Arrow has tests in place for those laws so typeclasses can keep their integrity over time.
+
+# Slide 15
+Functor Satisfies the following laws:
+* **Identity:** Mapping the identity function over every item in a container has no effect.
+    ```
+    fa.map(::identity) = fa
+    ```
+* **Composition:** Mapping a composition of two functions over every item in a container is the same as first mapping one function, and then mapping the other.
+    ```
+    fa.map(f).map(g) = fa.map(f andThen g)
+    ```
+
+# Slide 16
+You can **test** your own functor instances by using the Arrow encoded laws:
+```
+// build.gradle
+testCompile 'io.arrow-kt:arrow-test:0.7.1'
+```
+Depend from the `arrow-test` gradle module on your tests.
+```
+import arrow.test.laws.FunctorLaws // Functor laws are defined here
+
+@Test
+fun testFunctorLaws() {
+  FunctorLaws.laws(Option.functor(), ::Some, Eq.any())
+}
+```
+* We are passing the default functor instance provided by `Option`, but **you could pass your own one**.
+* `Eq.any()` provides an implementation of the `Eq` typeclass for equality. It uses `==` as its equality operator. It's enough for `Option` since its both implementations are defined as `data classes`, but you can (and should) pass your own `Eq` implementation for more complex types.
 
 # Final
 
