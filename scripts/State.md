@@ -20,7 +20,7 @@ If you notice from its definition, a State is nothing more than an instance of "
 
 # Slide 3
 
-To better illustrate the use of this data type, let's create a function that handles a counter with an accumulated value (which would be our state `S`),  and adds a value to it. The result of this operation would be our "A". Our function returns a simple "State<Int, Int>", in which we simply add the provided value to the counter, and return a new version of the state and the operation bundled together in a tuple. 
+To better illustrate the use of this data type, let's create a function that handles a counter with an accumulated value (which would be our state "S"),  and adds a value to it. The result of this operation would be our "A". Our function returns a simple "State<Int, Int>", in which we simply add the provided value to the counter, and return a new version of the state and the operation bundled together in a tuple. 
 
 The state and the result of the operation are not usually the same, but we'll keep it this way for clarity.
 
@@ -40,37 +40,37 @@ As we can expect from a functional data type, State provides several ways to com
 
 # Slide 6
 
-Map allows us to modify the results of our States without having to run anything in them, by transforming the resulting value from a change in a State (that is, the "A" in our tuple) to a different type "B". In the following example, we're transforming our Integer results into String values. But those transformations won't be actually applied until we actually run our State operations.
+Map allows us to modify the results of our States without having to run anything in them, by transforming the resulting value from a change in a State (that is, the "A" in our tuple) to a different type "B". In the following example, we're transforming our Integer results into String values. But those transformations won't be actually applied until we run our State operations.
 
 ---
 
 # Slide 7
 
-FlatMap allows us to chain multiple operations on States instances and combine their resulting values. For illustration purposes we've added an additional stateful operation, in this case a multiplication operation.
+FlatMap allows us to chain multiple operations on State instances and combine their resulting values. For illustration purposes we've added an additional stateful operation, in this case to multiply values.
 
-Then we can then combine both the addition and multiplication operations to obtain a new function that squares the values we got from the addition operation.
+Then we can combine both operations to obtain a new function that squares the values we got from the addition.
 
 ---
 
 # Slide 8
 
-Arrow allows us to combine several operations in a State in a more readable and imperative-looking way with the use of Monad bindings. Each call to bind() in our example is a coroutine suspended function which will bind to its value after each `State` has been updated to its new values. The operations are performed and combined with a mix of FlatMap and Map calls.
+Arrow allows us to combine several operations in a State in a more readable and imperative-looking way with the use of Monad bindings. Each call to bind() in our example is a coroutine suspended function which will bind to its value after each State has been updated to its new values. The operations are performed and combined with a mix of FlatMap and Map calls.
 
 --- 
 
 # Slide 9
 
-Λrrow also offers us ways to combine the results of several subsequent operations over a `State` instance, by the use of the Map operation within the context of an Applicative. In our example, we're combining the results of several stateful operations together in a pipe-like way with ease.
+Λrrow also offers us ways to combine the results of several subsequent operations over a State instance, by the use of the Map operation within the context of an Applicative. In our example, we're combining the results of several stateful operations together in a pipe-like way with ease.
 
 ---
 
 # Slide 10
 
-As is usual for the data types in Arrow, State has instances for several typeclasses, thus implementing all their associated operations. In our case these instances are:
+As it's usual for the data types in Arrow, State has instances for several typeclasses, thus implementing all their associated operations. In our case these instances are:
 
-- `Applicative`
-- `Functor`
-- `Monad`
+- Applicative
+- Functor
+- Monad
 
 ---
 
@@ -79,14 +79,14 @@ As is usual for the data types in Arrow, State has instances for several typecla
 - State is a data type that can be used to model state and handle its changes in a functional way.
 - In order to create State instances, we define a function that takes a State "S" as an input and returns a tuple that wraps together the next evolution of the State and a resulting value of the operation.
 - State also implements functions like map and flatMap that let us transform the resulting value of a State, while also combining them with other State instances.
-- Monad for comprehensions can be used to imperatively define a chain of transformations over a State in sequence.
+- Monad for comprehensions can be used to define a sequence of transformations over a State in a more imperative-looking way.
 - Applicative maps can also be used to combine the result of an arbitrary State change.
 
 --- 
 
 # State 12
 
-- We'll learn more about other data types like Try, Either ir IO, and also those type classes that power their abstractions like Functor, Applicative and Monad in other videos.
+- We'll learn more about other data types like Try, Either or IO; and also those type classes that power their abstractions like Functor, Applicative and Monad in other videos.
 - Arrow encourages a unified programming model, in which users can solve problems cohesively in all contexts following Typed Functional Programming principles applied to the Kotlin Programming Language.
 
 ---
