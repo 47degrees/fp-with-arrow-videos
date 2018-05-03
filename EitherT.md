@@ -29,9 +29,9 @@ val eitherInDeferred: DeferredK<Either<StringToNumberError, Int>> = async { Eith
 val eitherInList: ListK<Either<StringToNumberError, Int>> = listOf(stringToInt("one"), stringToInt("1")).k()
 val eitherInIO: IO<Either<StringToNumberError, Int>> = IO( {Either.right(1) })
 ```
-^ EitherT datatype is used when an Either value is wrapped inside another type. In this sense is similar to the OptionT datatype.
-^ We will see later what are the benefits of operating with this type.
-^ In this example we can see 3 examples where Either is shown wrapped inside an asynchronous computation, inside a List, or inside an IO.
+^ EitherT datatype is used when an Either value is wrapped inside another type. In this sense, it's similar to the OptionT datatype.
+^ We will see the benefits of operating with this type later on.
+^ In this example, we can see three examples where Either is shown wrapped inside an asynchronous computation, inside a List, or inside an IO.
 
 ---
 
@@ -74,8 +74,8 @@ eitherTIO.fold(IO.functor(), { "There was an error" }, { it })
 // IO("There was an error")
 ```
 
-^ The second argument is a function to operate with the Left case of the nested either.
-^ In this example we will return an IO of "There was an error" if the Either is a Left.
+^ The second argument is a function for operating with the Left case of the nested either.
+^ In this example, we will return an IO of "There was an error" if the Either is a Left.
 ^ Since this Either is a left, we will return an IO of "There was an error"
 
 ---
@@ -92,7 +92,7 @@ eitherTIO.fold(IO.functor(), { "There was an error" }, { it })
 
 ^ The third argument is a function to operate with the Right case of the nested either.
 ^ In this example, we simply return the value of the right case if the Either is a right.
-^ Since this Either is a right, when will return an IO of 99.
+^ Since this Either is a right, we will return an IO of 99.
 
 ---
 
@@ -109,7 +109,7 @@ eitherTIO.map(IO.functor()) { it + 1 }
 
 ^ Another advantage of EitherT is that we can operate over the right values with map.
 ^ In this example we can see an EitherT defined and how to provide a transformation for the right value.
-^ The result of this, and since this Either was a right case, the transformation will be 99 + 1, hence 100.
+^ With the result of this, and since this Either was a right case, the transformation will be 99 + 1, hence 100.
 
 ---
 
@@ -147,7 +147,7 @@ a.flatMap(IO.monad()) { one ->
 
 ^ Let's go with flatMap. Imagine that we define two EitherT instances.
 ^ With EitherT and flatMap we can compose them.
-^ The result of operating over the first EitherT, if it is a right, we will take the integer and su it with the second.
+^ The result of operating over the first EitherT, if it is a right, will be to take the integer and sum it with the second.
 ^ In the examples, the respective right values are: 1 and 2. In the flatMap operation we sum them.
 
 ---
@@ -171,15 +171,15 @@ EitherT.monad<ForIO, StringToNumberError>(IO.monad()).binding {
 // IO(Either.right(6))
 ```
 
-^ Composing multiple EitherT can result in a lot of nested code if we would do it with flatMap.
-^ There is an easier way to do it with Λrrow, and this is by doing a comprehension with binding.
+^ Composing multiple EitherTs can result in a lot of nested code if we do it with flatMap.
+^ There is an easier way to do this with Λrrow - by doing a comprehension with binding.
 ^ As we see in the code, we compose the values by using .bind() in each EitherT.
 
 ---
 
 # EitherT :: Monad binding
 
-Each call to __bind()__ is a coroutine suspended function which will bind to it's value only if the __EitherT__ is a __IO(Right)__:
+Each call to __bind()__ is a coroutine suspended function which will bind to its value only if the __EitherT__ is a __IO(Right)__:
 
 ```kotlin
 val a: EitherT<ForIO, StringToNumberError, Int> = EitherT(IO{Either.right(1)})
@@ -195,7 +195,7 @@ EitherT.monad<ForIO, StringToNumberError>(IO.monad()).binding {
 // IO(Either.right(6))
 ```
 
-^ With the Monad binding for EitherT we can call bind() sequentially and get the right values for each EitherT instance.
+^ With the Monad binding for EitherT, we can call bind() sequentially and get the right values for each EitherT instance.
 
 ---
 
@@ -218,7 +218,7 @@ EitherT.monad<ForIO, StringToNumberError>(IO.monad()).binding {
 ```
 
 ^ If any of the EitherT instances is a Left value, the comprehension would shortcircuit yielding the first Left it finds.
-^ In this case the result would return the Left value for b.
+^ In this case, the result would return the Left value for b.
 
 ---
 
@@ -241,9 +241,9 @@ EitherT.applicative<ForIO, Throwable>(IO.monad()).map(eitherTId, eitherTName, ei
 ```
 
 ^ So let's proceed with the last example.
-^ In this example we have several EitherT with UUID, String and Int in the right values,
-^ With Λrrow we can map over the three of them with the Applicative Builder.
-^ If all them are contains a right value we could compose them inside a new data class where we see that the types
+^ In this example, we have several EitherTs with UUID, String, and Int in the right values.
+^ With Λrrow we can map over all three of them with the Applicative Builder.
+^ If they all contain right values, we can compose them inside a new data class where we see that the types
 ^ are preserved.
 
 
@@ -265,8 +265,8 @@ EitherT.applicative<ForIO, Throwable>(IO.monad()).map(eitherTId, eitherTName, ei
 
 # EitherT :: Conclusion
 
-- __All techniques demonstrated are also available to use with other data types__ such as `Try`, `Either`, `IO` and you can build adapters for any data type.
-- We can learn more about other data types like `Try`, `Either`, `IO` and the type classes that power these abstractions such as `Functor`, `Applicative`, and `Monad` in other videos.
+- __All techniques demonstrated here are also available to use with other data types__ such as `Try`, `Either`, `IO` and you can build adapters for any data type.
+- You can learn more about other data types like `Try`, `Either`, `IO` and the type classes that power these abstractions such as `Functor`, `Applicative`, and `Monad` in other videos.
 - __Λrrow encourages a unified programming model__ in which you can solve problems cohesively in all contexts following Typed Functional Programming principles applied to the Kotlin Programming Language.
 
 ^ In Conclusion, you will see that the examples here are very similar to other data types, like Try, Either or IO.
