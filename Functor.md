@@ -19,7 +19,7 @@ import arrow.typeclasses.Functor
 
 `Functor` is a __Typeclass__, so it defines a given behavior.
 
-`Applicative` and `Monad` inherit its combninators. You will learn more about those in further videos.
+`Applicative` and `Monad` inherit its combinators. You will learn more about those in other videos in the series.
 
 Functor
 Applicative
@@ -35,7 +35,7 @@ interface Functor<F> {
 }
 ```
 
-- Functor is __parametric over a type constructor `F`__. This allows us to build abstract functions over the behaviors that Functor defines and forgetting about the concrete types that F may refer to.
+- Functor is __parametric over a type constructor `F`__. This allows us to build abstract functions over the behaviors that Functor defines and forget about the concrete types that F may refer to.
 
 - We call this __ad-hoc polymorphism__, the ability to write polymorphic programs that can be defined in generic terms.
 
@@ -43,7 +43,7 @@ interface Functor<F> {
 
 # Functor :: map
 
-`Functor` abstracts the hability to __map__ over the computational context of a type constructor `F`.
+`Functor` abstracts the ability to __map__ over the computational context of a type constructor `F`.
 
 In other words, it provides a mapping function for the `F` type:
 
@@ -125,7 +125,7 @@ Here `f` is `{ it *  2 }`, which will transform the inner data.
 
 # Functor :: Data type bias
 
-Sometimes mapping the value just makes sense over one of the implementations of a data type.
+Sometimes mapping the value over one of the implementations of a data type just makes sense.
 
 One exmaple of this is the `Option` type, with two different implementations:
 
@@ -162,7 +162,7 @@ As you can see, the computation gets short-circuited when it's a `None`.
 
 # Functor :: Data type bias
 
-Same thing happens for other data types like `Try<A>`.
+The same thing happens for other data types like `Try<A>`.
 
 `Try` models safe access to API's that may throw exceptions:
 
@@ -214,7 +214,7 @@ val next = lifted(Option(1))
 
 # Functor :: Laws
 
-Any Typeclass __must satisfy some mathematical laws__ in order to be considered a Typeclass.
+All Typeclasses __must satisfy some mathematical laws__ in order to be considered a Typeclass.
 
 Arrow has tests in place for those laws so typeclasses can keep their integrity over time.
 
@@ -258,8 +258,8 @@ fun testFunctorLaws() {
 }
 ```
 
-- We are passing the default functor instance provided by `Option`, but __you could pass your own one__.
-- `Eq.any()` provides an implementation of the `Eq` typeclass for equality. It uses `==` as its equality operator. It's enough for `Option` since its both implementations are defined as `data classes`, but you can (and should) pass your own `Eq` implementation for more complex types.
+- We are passing the default functor instance provided by `Option`, but __you could pass your own__.
+- `Eq.any()` provides an implementation of the `Eq` typeclass for equality. It uses `==` as its equality operator. It's enough for `Option` since both its implementations are defined as `data classes`, but you can (and should) pass your own `Eq` implementation for more complex types.
 
 ---
 
