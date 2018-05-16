@@ -6,6 +6,8 @@ slidenumbers: true
 
 __`EitherT`__ is a data type used in __Λrrow__ for computing an Either that is nested inside another monad.
 
+^ EitherT datatype is used when an Either value is wrapped inside another type. In this sense, it's similar to the OptionT datatype.
+
 ---
 
 # EitherT
@@ -29,9 +31,8 @@ val eitherInDeferred: DeferredK<Either<StringToNumberError, Int>> = async { Eith
 val eitherInList: ListK<Either<StringToNumberError, Int>> = listOf(stringToInt("one"), stringToInt("1")).k()
 val eitherInIO: IO<Either<StringToNumberError, Int>> = IO( {Either.right(1) })
 ```
-^ EitherT datatype is used when an Either value is wrapped inside another type. In this sense, it's similar to the OptionT datatype.
-^ We will see the benefits of operating with this type later on.
-^ In this example, we can see three examples where Either is shown wrapped inside an asynchronous computation, inside a List, or inside an IO.
+
+^ Here, we can see an Either wrapped inside an asynchronous computation, inside a List, or inside an IO.
 
 ---
 
@@ -75,7 +76,7 @@ eitherTIO.fold(IO.functor(), { "There was an error" }, { it })
 ```
 
 ^ The second argument is a function for operating with the Left case of the nested either.
-^ In this example, we will return an IO of "There was an error" if the Either is a Left.
+^ In this example, we will return an IO of "There was an error".
 ^ Since this Either is a left, we will return an IO of "There was an error"
 
 ---
@@ -240,7 +241,6 @@ EitherT.applicative<ForIO, Throwable>(IO.monad()).map(eitherTId, eitherTName, ei
 // IO(Either.right(Person(<uuid>, "Peter Parker", 23)))
 ```
 
-^ So let's proceed with the last example.
 ^ In this example, we have several EitherTs with UUID, String, and Int in the right values.
 ^ With Λrrow we can map over all three of them with the Applicative Builder.
 ^ If they all contain right values, we can compose them inside a new data class where we see that the types
