@@ -22,14 +22,14 @@ import arrow.typeclasses.Functor
 
 `Functor` is a __Typeclass__, so it defines a given behavior.
 
-`Applicative` and `Monad` inherit its combinators. You will learn more about those in other videos in the series.
+`Applicative` and `Monad` inherit its combinators. You will learn more about those in other videos in this series.
 
 Functor
 Applicative
 Monad
 
-^ Functor is defined as a Typeclass. On pure Functional Programming, Typeclasses define behaviors.
-^ We'll know about which behavior is encoded in the Functor in further slides.
+^ Functor is defined as a Typeclass. In pure Functional Programming, Typeclasses define behaviors.
+^ We'll know about which behavior is encoded in the Functor in upcoming slides.
 ^ Other very well known typeclasses are Applicative and Monad, and this is how they're related to each other.
 (necesitaremos diagrama de cajitas con flechas de dependencia entre ellas)
 ^ We'll talk about those in other Arrow videos.
@@ -48,8 +48,8 @@ interface Functor<F> {
 
 - We call this __ad-hoc polymorphism__, the ability to write polymorphic programs that can be defined in generic terms.
 
-^ Functor is parametric over a generic type F. F here, stands for a data type or what we also call a "Type Constructor".
-^ Thanks to this, we can declare generic functions encoded on top of the behaviors provided by Functor and forget all the way about the concrete data type used for F.
+^ Functor is parametric over a generic type F. Here, F stands for a data type or what we also call a "Type Constructor".
+^ Thanks to this, we can declare generic functions encoded on top of the behaviors provided by Functor and forget all about the concrete data type used for F.
 ^ This is called "Ad-Hoc polymorphism" and that's how typeclasses allow us to encode completely generic and polymorphic programs that can work over many different data types.
 
 ---
@@ -78,7 +78,7 @@ fun F<A>.map(f: (A) -> B): F<B>
 - `f` is the function transforming the wrapped value.
 - `map()` returns the transformed value wrapped into the same context: `F<A> -> F<B>`
 
-^ This just means, that you'll pass in a mapping function that can operate over the wrapped value inside the type constructor, and then return the already mapped value wrapped again inside of F.
+^ This just means, that you'll pass a mapping function that can operate over the wrapped value inside the type constructor, and then return the already mapped value wrapped again inside of F.
 ^ So you're basically providing a mapping function for the F type.
 
 ---
@@ -94,7 +94,7 @@ Any type constructor whose contents can be transformed can provide an instance o
 - ...and many more.
 
 ^ We previously said that the Functor can work over any type constructor F.
-^ Truth is that F must be a data type able to provide an instance of Functor for it. Some examples would be: Option, Try, List, IO, and many more.
+^ The truth is, that F must be a data type that's able to provide an instance of Functor for it. Some examples would be: Option, Try, List, IO, and many more.
 
 ---
 
@@ -102,7 +102,7 @@ Any type constructor whose contents can be transformed can provide an instance o
 
 Using Typeclasses you can define __completely polymorphic programs__ that can work over any data types providing an instance of `Functor`.
 
-This is actually the biggest power Typeclasses have.
+This is actually the greatest power Typeclasses have.
 
 ```kotlin
 // Abstract program, we just know we need a Functor
@@ -110,7 +110,7 @@ fun <F> Functor<F>.addOne(fa: Kind<F, Int>): Kind<F, Int> =
   fa.map { it + 1 }
 ```
 
-^ The hability to write polymorphic programs working over any data type is the most important bit to learn about typeclasses.
+^ The ability to write polymorphic programs working over any data type is the most important thing to learn about typeclasses.
 ^ Here you have an example: We can write a program in a completely abstract way, working over ANY instance of Functor of F, so the functor behavior will be used to map over the inner value of it.
 ^ Here we're just adding one to that value, and then returning the already mapped value wrapped again into F.
 
@@ -129,15 +129,15 @@ Try.functor().addOne(Try { 1 }).fix() // Success(2)
 ```
 
 ^ So, after having that abstract declaration, we can make it concrete afterwards.
-^ On this example we're fixing the abstract behavior for two different data types: `Option` and `Try`.
-^ The moment to make your program concrete and fix it to a given type is basically when you're providing the implementation details. So you'll do it when you want to finally run your program.
-^ Any point in time before that, your program will be completely abstract, and you'll be highly interested on keeping that fact as long as possible.
+^ On this example, we're fixing the abstract behavior for two different data types: `Option` and `Try`.
+^ The moment you make your program concrete and fix it to a given type is basically when you're providing the implementation details. So you'll do it when you want to finally run your program.
+^ Any point in time prior to that, your program will be completely abstract, and you'll be highly interested in keeping it that way for as long as possible.
 
 ---
 
 # Functor :: Option<Functor>
 
-Here you have an example on how to map over some Optional data.
+Here you have an example of how to map over some Optional data.
 
 ```kotlin
 import arrow.*
@@ -150,9 +150,9 @@ Option(1).map { it * 2 }
 
 Here `f` is `{ it *  2 }`, which will transform the inner data.
 
-^ After knowing about polymorphic programs, we can also read some simple examples about how map works over different data types.
+^ After understanding polymorphic programs, we can also read some simple examples on how map works over different data types.
 ^ Here you have a simple mapping over an optional value. We can do it because Option is able to provide an instance of functor for it.
-^ Note that types able to provide a functor instance, already provide the functor syntax activated over them. That's why we can call map over the optional value without using an explicit instance of Functor. Arrow is providing it for you under the hood.
+^ Note that types that are able to provide a functor instance, already provide the functor syntax activated over them. That's why we can call map over the optional value without using an explicit instance of Functor. Arrow provides this for you under the hood.
 
 ---
 
@@ -169,8 +169,8 @@ sealed class Option<A> {
 }
 ```
 
-^ There are many cases where mapping over some implementations of a given data type do not make much sense.
-^ One good example would be Option, which is defined as a sealed class with a couple of implementations: None, and Some.
+^ There are many cases where mapping over some of the implementations of a given data type do not make much sense.
+^ One good example of this would be Option, which is defined as a sealed class with a couple of implementations: None, and Some.
 
 ---
 
@@ -192,12 +192,12 @@ Option.functor().increment(None).fix()
 // None
 ```
 
-As you can see, the computation gets short-circuited when it's a `None`.
+As you can see, the computation short-circuits when it's a `None`.
 
-^ Given that option just contains a value when it's a Some, that's the only case we would need to be able to map over.
+^ Given that option just contains a value when it's a Some, it's the only case we would need to be able to map over.
 ^ That's why we say that Option is "biased" toward the Some case.
 ^ As you can see on this snippet, we can call the increment method for both implementations, Some and None.
-^ The difference is that it will just work when it's a Some. Whenever we try to map over a None, will get a None as a result.
+^ The difference is that it will only work when it's a Some. Whenever we try to map over a None, we'll get a None as a result.
 ^ So, if we look at Option.None as a way to express an error representing the absence of a value, any mapping computations built over it will be short-circuiting the error and keep returning None.
 
 ---
@@ -240,7 +240,7 @@ Try.functor().increment(Try { throw RuntimeException() }).fix()
 
 ^ Try is biased towards its Success implementation.
 ^ Right after making our program concrete and fixing it to Try, we call increment over it. This time we are using an explicit functor instance for Try. Since the program is valid, it will succeed and we'll get the value correctly mapped and wrapped into the same context.
-^ In the other hand, when the operation turns out to be a Failure, any computations over it will keep returning Failure.
+^ On the other hand, when the operation turns out to be a Failure, any computations over it will keep returning Failure.
 
 ---
 
@@ -252,7 +252,7 @@ The `Functor` also provides the `lift` combinator to __lift a function to the fu
 fun lift(f: (A) -> B): (F<A>) -> F<B>
 ```
 
-Thanks to this you can apply it over values wrapped in the same data type context.
+Thanks to this, you can apply it over values wrapped in the same data type context.
 
 ```kotlin
 val lifted = Option.functor().lift({ n: Int -> n + 1 })
@@ -262,7 +262,7 @@ val next = lifted(Option(1))
 
 ^ Another behavior provided by Functor is the lift combinator.
 ^ Lift is able to lift a function to the functor context.
-^ So you pass a function from A to B, and lift will return a funcion from F of A to F of B. You can store that lifted function into a variable, and use it later on.
+^ So you pass a function from A to B, and lift will return a function from F of A to F of B. You can store that lifted function into a variable, and use it later on.
 ^ Once you have your function lifted to the given context, you can apply it over any values wrapped over the same context, like we're doing here.
 ^ We've chosen Option here as the F context.
 
@@ -326,7 +326,7 @@ fun testFunctorLaws() {
 - `Eq.any()` provides an implementation of the `Eq` typeclass for equality. It uses `==` as its equality operator. It's enough for `Option` since both its implementations are defined as `data classes`, but you can (and should) pass your own `Eq` implementation for more complex types.
 
 ^ If you are creating your own Functor instances for your custom data types, you'll also need a way to ensure those instances are satisfying the Functor laws. You can do it by fetching the arrow-test artifact.
-^ Once you do it you can call the laws function over the FunctorLaws object and pass in your functor instance, and the Eq instance that you will need to define to provide a way to compare two instances of it for equality.
+^ Once you do this, you can call the laws function over the FunctorLaws object and pass in your functor instance, and the Eq instance that you will need to define to provide a way to compare two instances of it for equality.
 
 ---
 
