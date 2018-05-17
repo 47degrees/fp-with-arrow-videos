@@ -61,7 +61,7 @@ interface Functor<F> {
 In other words, it provides a mapping function for the `F` type:
 
 ```kotlin
-fun F<A>.map(f: (A) -> B): F<B>
+fun Kind<F, A>.map(f: (A) -> B): F<B>
 ```
 
 ^ The most important behavior provided by Functor is the map function.
