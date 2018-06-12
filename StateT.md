@@ -190,7 +190,39 @@ fun goDownS(floors: Int = 1) = StateT<EitherPartialOf<ElevatorError>, Elevator, 
 
 ---
 
-# StateT :: Monad instance
+# State :: Transformations
+
+We can transform __StateT__ values through several built-in functions:
+- map
+- flatMap
+- Monad # binding
+- Applicative # map
+
+^ Let's see how we can use our usual available transformations to modify and combine the values contained in our StateT instances.
+
+---
+
+# StateT :: Map
+
+We can use `map` to define transformations on our values before updating our state:
+
+```kotlin
+fun goDownPrint() = goDownS(2).map(Either.monad()) { i ->
+    "Current floor: $i"
+}
+
+val printResult = goDownPrint().runM(Either.monad(), Elevator(3, 3))
+val printResultE = goDownPrint().runM(Either.monad(), Elevator(1, 0))
+
+// printResult = Right(b=Tuple2(a=Elevator(floors=3, currentFloor=1), b=Current floor: 1))
+// printResultE = Left(a=ElevatorError$ElevatorDownError@50134894)
+``` 
+
+^ As in State we can also use map to transform the values we obtain from the changes in our state before we actually apply them. Let's transform the result of going down two floors to return a more printable result of the change in our state. Also notice how our error handling still keeps doing its job even after specifying our transformation.
+
+---
+
+# StateT :: FlatMap
 
 We can use `flatMap` to combine the previous operations:
 
@@ -240,24 +272,21 @@ Each call to bind() is a coroutine suspended function which will bind to it's va
 
 ---
 
-# StateT :: Map transformations
+# StateT :: Applicative map
 
-We can also use `map` to define transformations on our values before updating our state:
+We can chain multiple operations that don't depend on the result of the others:
 
-```kotlin
-fun goDownPrint() = goDownS(2).map(Either.monad()) { i ->
-    "Current floor: $i"
-}
+fun multipleOpsS() = StateT.applicative<EitherPartialOf<ElevatorError>, Elevator>(Either.monad()).map(goDownS(1), liftUpS(1), goDownS(1), {
+    (r1, r2, r3) ->
+})
 
-val printResult = goDownPrint().runM(Either.monad(), Elevator(3, 3))
-val printResultE = goDownPrint().runM(Either.monad(), Elevator(1, 0))
+val result = multipleOpsS().runM(Either.monad(), Elevator(3, 2))
+val resultError = multipleOpsS().runM(Either.monad(), Elevator(3, 0))
 
-// printResult = Right(b=Tuple2(a=Elevator(floors=3, currentFloor=1), b=Current floor: 1))
-// printResultE = Left(a=ElevatorError$ElevatorDownError@50134894)
-``` 
+// result = Right(b=Tuple2(a=Elevator(floors=3, currentFloor=1), b=kotlin.Unit))
+// resultError = Left(a=ElevatorError$ElevatorDownError@50134894)
 
-^ As in State we can also use map to transform the values we obtain from the changes in our state before we actually apply them. Let's transform the result of going down two floors to return a more printable result of the change in our state. Also notice how our error handling still keeps doing its job even after specifying our transformation.
-
+^ Λrrow also offers us ways to combine the results of several subsequent operations over a StateT instance, by the use of the Map operation within the context of an Applicative. In our example, imagine a user presses several buttons in our imaginary elevator. Thanks to the map operation we can combine the results of these multiple stateful operations together with ease. Notice how if any of the operations fail, the map call will short-circuit and return an error.
 ---
 
 # State :: Available instances
