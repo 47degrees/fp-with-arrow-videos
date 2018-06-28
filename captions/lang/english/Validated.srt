@@ -1,0 +1,193 @@
+
+
+--- Intro (external)
+
+Welcome to the series of videos about functional programming in Kotlin with Arrow.
+
+Arrow is a library that is packed with data types and type classes bringing typed FP to Kotlin.
+
+In this video, we're going to learn about the Validated data type and what it's used for.
+
+
+--- Validated
+
+Validated is a data typing error that we use to model when a function may return two kind of values, which could be considered valid, or invalid.
+
+As with Either, it can be one or the other.
+
+
+
+--- Validated :: ADT
+
+Validated is frequently modeled as an algebraic data type in the same way we saw in Option and Either, Validated has two cases.
+
+Algebraic data types are modeled in Kotlin with sealed classes.
+
+
+
+--- Validated :: ADT
+
+Validated has two possible values either an Invalid or a Valid.
+
+
+
+--- Validated :: Invalid
+
+In the invalid case, we usually encode a non expected value...
+
+
+
+--- Validated :: Valid
+
+...in the valid case we encode what we can call the happy path.
+
+This is important because Validated is, like Either, right biased, this means that most of the functions like map, filter,
+will operate over the valid case.
+
+
+
+--- Validated :: Invalid(b)
+
+
+We have two main constructors to work with Validated.
+
+The Invalid constructor places them on the left.
+
+As we've seen before, we are modeling unknown errors without using exceptions and putting that on the left side
+because our computation is mostly going to happen on the end, which is the right side.
+
+
+--- Validated :: Valid(b)
+
+This right side, can be placed with the Valid constructor, which allows us to bring values into the context of Validated placing them on the right.
+
+
+
+---  Validated :: Extension syntax
+
+Arrow provides an extension syntax for Validated. We can easily lift values to the left, invalid, and right, valid, case,
+provided the receiver declares a type, in which we know what the other case is.
+
+
+
+--- Validated :: ValidatedNel
+
+
+Usually, when the value is Invalid and stored in a List we want to ensure that it is non-empty. This is pretty obvious as we want something stored in it that will describe what error/failure occurred. This can be ensured by using the Arrow NonEmptyList type. It ensures that the List that it wraps around will always have at least one element.
+
+NonEmptyList and Validated can be used together and, in fact, that combination is very common. Thus, Arrow provides us already with a type alias along with helpful functions that we can use to operate on this kind of constructs.
+
+
+
+--- Validated :: Transformations
+
+We can transform the inner contents of Validated with several built-in functions such as fold, getOrElse, or map.
+This might be familiar to you at this time because we saw the same functions in Option or in Either.
+This is part of Arrow's unified model of programming.
+
+We take all the functional combinators and try to apply them as many data types as possible,
+so that all of them share the same API.
+
+
+--- Validated :: when
+
+We can extract Validated inner values by using Kotlin's when expressions.
+In this case, you can see how the result value will be of type Validated<KnownError, Int>
+can be easily placed on our own expressions, and then we can branch out logic based on the valid and invalid cases.
+
+
+--- Validated :: fold
+
+An easier way to deal with this case, is using fold. Fold allows us to pass two functions.
+
+
+--- Validated :: fold
+
+The first function addresses the invalid case.
+Here we are saying that if we find a KnownError, we should return zero.
+
+
+--- Validated :: fold
+
+The second argument is a function that addresses the valid case.
+Here we have the chance to transform the inner contents of valid.
+
+
+
+--- Validated :: getOrElse
+
+A concretion to the previous fold is getOrElse.
+
+In getOrElse, we're just simply providing the function that addresses the invalid case.
+Here we're saying that if it's a KnownError, we should return 0 instead.
+
+
+
+--- Validated :: map
+
+Map allows us to transform the values inside a Validated.
+
+It operates only on the valid case, and that's why we say that Validated is also right biased.
+
+
+
+--- Validated :: map
+
+If we were mapping and there was an invalid, in that case the transformation is never applied and the invalid is left untouched.
+
+
+
+--- Validated :: toValidatedNel
+
+Through toValidatedNel we are able to transform a Validated into a ValidatedNel, hence given that we are in a Invalid case, we can acces to all the benefits from the NonEmptyList data type.
+
+
+
+--- Validated :: orElse
+
+
+The operator orElse allows us to set apart distinct Validated values. With it, only the error on the right is preserved and the error on the left is ignored.
+
+
+--- Validated :: findValid
+
+With findValid we can also discriminate different Validated values. This is similar to orElse except that here failures are accumulated.
+
+Then, the type held in the Invalid value should be of the Semigroup type class, as these failures are accumulated through the combine function defined by the semigroup.
+
+
+
+--- Validated :: Applicative Builder
+
+Validated doesn't have a flatMap operator, as Either, but with the applicative builder
+we can compute different values of Validated that are independent from each other.
+
+This way we can map or convert into tuples, a set of operations preserving
+the type information and preserving their id.
+
+
+--- Validated :: Applicative Builder
+
+Also, if we find an invalid value, then the computation won't short-circuit, as it happens when
+working with Either data types, but the Invalid values encountered will be combined, and returned.
+
+As we've seen before we need that the Invalid type is of the Semigroup type class, to be able to combine these values at each step properly.
+
+
+
+
+--- Outro (external)
+
+In this video, we learned about Validated.
+
+In the same way as with other data types, Validated serves a lot of the functions and different functionality that Either did - fold, getOrElse, map.
+
+Arrow proposes a unified programming model for all data types.
+
+We'll learn more about those in the next series. Thanks for watching.
+
+
+
+ 
+
+
