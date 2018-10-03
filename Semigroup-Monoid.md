@@ -20,7 +20,7 @@ import arrow.typeclasses.Monoid
 
 # Monoid
 
-`Monoid` is a __Typeclass__ which extends the power of `Semigroup` providing an additional `empty` method, to semigroup´s `combine`. You will learn more about `Semigroup` in other videos in this series.
+`Monoid` is a __Typeclass__ which extends the power of `Semigroup` providing an additional `empty` method, to semigroup´s `combine`.
 
 ```
 interface Monoid<A> : Semigroup<A> {
@@ -28,23 +28,22 @@ interface Monoid<A> : Semigroup<A> {
 }
 ```
 
-^ Monoid is defined as a Typeclass, and like all Typeclasses in Functional Programming, has encoded behaviors that we will be talking about in the next slides.
-^ It extends the semigroup type class, adding an empty method to semigroup´s combine.
+^ Monoid is defined as a Typeclass, and like all Typeclasses in Functional Programming, has encoded behaviors. It extends the semigroup type class, adding an empty method to semigroup´s combine.
 
 ---
 
 # Monoid :: empty
 
-Having an __empty__ defined allows us to combine all the elements of an potentially empty collection of `T` for which a `Monoid <T>` is defined and as a result we would get a `T` element instead of an `Option <T>`, since we have a specific value to fall back to. In this way we do not have to worry about possible empty values in our collection to be combined.
+Having an __empty__ defined allows us to combine all the elements of an potentially empty collection of `T` for which a `Monoid <T>` is defined and as a result we would get a `T` element instead of an `Option <T>`, since we have a specific value to fall back to.
 
 ```kotlin
-ForString extensions {
-    listOf<String>("Try", " ", "Λ", "","R", "R", "O", "W").combineAll()
+with(String.monoid()){
+    listOf("Try", " ", "Λ", "","R", "R", "O", "W").combineAll()
 }
 //Try ΛRROW
 ```
 
-^ And what is special about this empty method? The answer is that it allows us to combine all the elements of an hypothetical empty list of T for which a Monoid T is defined. As a result we would get a T element instead of an Option T, since we have a specific value to fall back to. So we can forget about the concern of having a possible empty value in our collection to combine. (mark empty value)
+^ And what is special about this empty method? The answer is that it allows us to combine all the elements of an hypothetical empty list of T for which a Monoid T is defined. As a result we would get a T element instead of an Option T, since we have a specific value to fall back to.
 
 ---
 
@@ -143,7 +142,7 @@ In this example, we see a function where the `foldMap` receives a Monoid `M` and
 The `foldMap` usses the `Monoid.empty` as base instance and uses the function `Tuple2.combine` for combining the base instance with the result of the fuction doing it recursively among every element in the list.
 This way we are able to combine both values in one pass!
 
-```
+```kotlin
 ForListK extensions {
   val M = monoidTuple(Int.monoid(), String.monoid())
   val list = listOf(1, 1).k()
@@ -156,7 +155,6 @@ ForListK extensions {
 ```
 
 ^ In this example, we see a function where the foldMap receives a Monoid M and a function that takes an element from the list and returns the type of the Monoid. In this case is a Tuple composed by a Monoid of Int and a Monoid of String.
-^ As a note, ForListK extensions allows to invoke the .k function which provides the use of foldMap method we are using in the list. (mark the .k())
 ^ The foldMap uses the Monoid.empty as base instance and uses the function Tuple2.combine for combining the base instance with the result of the fuction doing it recursiverly among every element in the list.
 ^ Magically, we are able to combine both values in one pass!
 
