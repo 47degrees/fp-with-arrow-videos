@@ -2,6 +2,154 @@ autoscale: true
 footer: ![Arrow](arrow-brand-128x128.png) [@aMateoPaolo](https://twitter.com/aMateoPaolo) [@47deg](https://twitter.com/47deg) :: [Λrrow](http://arrow-kt.io) :: [http://arrow-kt.io/docs/typeclasses/monoid/](http://arrow-kt.io/docs/typeclasses/monoid/)
 slidenumbers: true
 
+
+# Semigroup
+
+__`Semigroup`__ is available in the __arrow-typeclasses__ module.
+
+```groovy
+// gradle
+compile 'io.arrow-kt:arrow-typeclasses:$arrowVersion'
+
+import arrow.typeclasses.Semigroup
+```
+^ The Semigroup is provided on the arrow-typeclasses artifact.
+^ You can use it as soon as you add it to your build.gradle file.
+
+---
+
+# Semigroup
+
+`Semigroup` is a __Type Class__, so it defines a given behavior.
+
+`Monoid` inherit its combinators. 
+
+```
+Semigroup
+
+Monoid
+```
+
+^ Semigroup is defined as a Type Class. In pure Functional Programming, type classes define behaviors.
+^ Other very well known type classes are Monoids, and we will talk about it later in this same video since they are intimately related.
+
+---
+
+# Semigroup :: Polymorphism
+
+```kotlin
+interface Semigroup<A> {
+    //...
+}
+```
+
+- Semigroup is __parametric over a type constructor `A`__. This allows us to build abstract functions over the behaviours that Semigroup defines and forget about the concrete types that A may refer to.
+
+- We call this __ad-hoc polymorphism__, the ability to write polymorphic programs that can be defined in generic terms.
+
+^ Semigroup is parametric over a generic type A. Here, A stands for a data type, also called "Type Constructor".
+^ Thanks to this, we can declare generic functions encoded on top of the behaviours provided by Semigroup and forget all about the concrete data type used for A.
+^ We called this "Ad-Hoc polymorphism" and that's how type classes allow us to encode completely generic and polymorphic programs that can work over many different data types.
+
+---
+
+# Semigroup :: combine
+
+`Semigroup` abstracts the ability to __combine__ two values of the same type `A`.
+
+In other words, it provides a combining function for the `A` type:
+
+```kotlin
+fun A.combine(b: A): A
+```
+
+^ The most important behaviour provided by Semigroup is the combine function.
+^ With combine, we can combine/concat/join two A values.
+^ Semigroup defines on a type A a combination function which takes as input two elements of A to return an element of the same type A.
+
+---
+
+# Semigroup :: Data types
+
+Any type constructor whose contents can be combined can provide an instance of `Semigroup`.
+
+- `Option<A>`
+- `NonEmptyList<A>`
+- `ListK<A>`
+- `SequenceK<A>`
+- `SetK<A>`
+- `MapK<A>`
+- `SortedMapK<A>`
+- `Either<A>`
+- `Try<A>`
+
+Arrow also offers Semigroup instances to native Kotlin `String`, `Byte`, `Double`, `Int`, `Long`, `Short` and `Float` types.
+
+^ In order for a data type content to be “combinable”, we need its type constructor to be able to provide an instance of a Semigroup. Some data types examples on Arrow that offer exactly that would be: Option, NonEmptyList, ListK, SequenceK, SetK...
+
+---
+
+# Semigroup :: combine
+
+In this example we are showing the main characteristic about `Semigroup`, the `combine` method.
+As you can see here, we can apply it for both a `Double` and a `String` type, but remember you can use it with many other types.
+
+
+```kotlin
+with(Double.semigroup()){
+    4.5.combine(7.0).combine(2.5)
+}
+//14.0
+```
+
+```kotlin
+with(String.semigroup()){
+    "This is ".combine("functional ") + ("programming.")
+}
+//This is functional programming.
+```
+
+Additionaly `Semigroup` adds `+` syntax to all types for which a `Semigroup` instance exists
+
+^ This is an example which explain the main characteristic about Semigroup´s combine method in a clear way.
+^ We are applying it to a Double and a String in this case, but remember you can use it with many other types.
+^ Additionaly Semigroup adds + syntax (mark +) to all types for which a Semigroup instance exists
+^ With a semigroup, we gain the capability to combine, and that is the main value of it.
+
+---
+
+# Semigroup :: Laws
+
+All Typeclasses __must satisfy some mathematical laws__ in order to be considered a Typeclass.
+
+Arrow has tests in place for those laws so typeclasses can keep their integrity over time.
+
+^ When we think about typeclasses, we assume they need to satisfy some mathematical laws in order to be considered a typeclass.
+^ Those laws are coded and enforced by tests inside Arrow, so we can ensure typeclasses integrity over time.
+^ Some laws could be identity, associativity, composition, and so on.
+
+---
+
+# Semigroup :: Laws
+
+Semigroup satisfies the following law:
+
+- __Associativity__: When adding or multiplying, it doesn't matter how we combine the group of numbers.
+
+```kotlin
+    (a.combine(b)).combine(c)
+```
+ must be the same as: 
+ 
+```kotlin
+    (a.combine(b.combine(c))
+```
+ 
+^ Semigroup satisfies one law: Associativity.
+^ The combine function of Semigroup must be associative, which is to say, in pseudo code: "(a.combine(b)).combine(c)" is equivalent to "a.combine(b.combine(c))".
+
+---
+
 # Monoid
 
 __`Monoid`__ is available in the __arrow-typeclasses__ module.
@@ -12,7 +160,7 @@ compile 'io.arrow-kt:arrow-typeclasses:$arrowVersion'
 
 import arrow.typeclasses.Monoid
 ```
-
+^ At this point, we could talk about Monoid type class.
 ^ Monoid is provided on the arrow-typeclasses artifact.
 ^ You can use it as soon as you add it to your build.gradle file.
 
@@ -28,7 +176,7 @@ interface Monoid<A> : Semigroup<A> {
 }
 ```
 
-^ Monoid is defined as a Typeclass, and like all Typeclasses in Functional Programming, has encoded behaviors. It extends the semigroup type class, adding an empty method to semigroup´s combine.
+^ Monoid extends the semigroup type class, adding an empty method to semigroup´s combine.
 
 ---
 
@@ -38,7 +186,7 @@ Having an __empty__ defined allows us to combine all the elements of an potentia
 
 ```kotlin
 with(String.monoid()){
-    listOf("Try", " ", "Λ", "","R", "R", "O", "W").combineAll()
+    listOf("Try", " ", "Λ", "", "R", "R", "O", "W").combineAll()
 }
 //Try ΛRROW
 ```
@@ -72,8 +220,8 @@ The advantage of using these type class provided methods is that we can compose 
 ```kotlin
 import arrow.data.*
 
-ForListK extensions {
-    listOf("Λ", "R", "R", "O", "W").k().foldMap(String.monoid(), ::identity)
+with(ListK.foldable()){
+  listOf("Λ", "R", "R", "O", "W").k().foldMap(String.monoid(), ::identity)
 }
 //ΛRROW
 ```
@@ -87,7 +235,7 @@ ForListK extensions {
 We can also define our own instances. Let´s use as an example `Foldable`'s `foldMap`, which maps over values accumulating the results, using the available `Monoid` for the type mapped onto. With `foldMap` we can also apply a function to the accumulated value.
 
 ```kotlin
-ForListK extensions { 
+with(ListK.foldable()) { 
   listOf(1, 2, 3, 4).k().foldMap(Int.monoid(), {it * 2})
 }
 //20
@@ -143,11 +291,11 @@ The `foldMap` usses the `Monoid.empty` as base instance and uses the function `T
 This way we are able to combine both values in one pass!
 
 ```kotlin
-ForListK extensions {
-  val M = monoidTuple(Int.monoid(), String.monoid())
+with(ListK.foldable()) {
+  val m = monoidTuple(Int.monoid(), String.monoid())
   val list = listOf(1, 1).k()
 
-  list.foldMap(M) { n: Int ->
+  list.foldMap(m) { n: Int ->
    Tuple2(n, n.toString())
   }
 }
