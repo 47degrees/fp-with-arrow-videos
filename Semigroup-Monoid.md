@@ -51,7 +51,7 @@ fun A.combine(b: A): A
 
 ---
 
-# Semigroup :: Data types (por modificar)
+# Semigroup :: Data types
 
 Arrow provides instances of `Semigroup` defined for many types found in Arrow and the Kotlin std lib. 
 
