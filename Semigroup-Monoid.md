@@ -35,24 +35,6 @@ Monoid
 
 ---
 
-# Semigroup :: Polymorphism
-
-```kotlin
-interface Semigroup<A> {
-    //...
-}
-```
-
-- Semigroup is __parametric over a type constructor `A`__. This allows us to build abstract functions over the behaviours that Semigroup defines and forget about the concrete types that A may refer to.
-
-- We call this __ad-hoc polymorphism__, the ability to write polymorphic programs that can be defined in generic terms.
-
-^ Semigroup is parametric over a generic type A. Here, A stands for a data type, also called "Type Constructor".
-^ Thanks to this, we can declare generic functions encoded on top of the behaviours provided by Semigroup and forget all about the concrete data type used for A.
-^ We called this "Ad-Hoc polymorphism" and that's how type classes allow us to encode completely generic and polymorphic programs that can work over many different data types.
-
----
-
 # Semigroup :: combine
 
 `Semigroup` abstracts the ability to __combine__ two values of the same type `A`.
@@ -69,23 +51,19 @@ fun A.combine(b: A): A
 
 ---
 
-# Semigroup :: Data types
+# Semigroup :: Data types (por modificar)
 
-Any type constructor whose contents can be combined can provide an instance of `Semigroup`.
+Arrow provides instances of `Semigroup` defined for many types found in Arrow and the Kotlin std lib. 
 
-- `Option<A>`
-- `NonEmptyList<A>`
-- `ListK<A>`
-- `SequenceK<A>`
-- `SetK<A>`
-- `MapK<A>`
-- `SortedMapK<A>`
-- `Either<A>`
-- `Try<A>`
+- Int
+- Double
+- Short
+- Long
+- Sting
+- ...and many more.
 
-Arrow also offers Semigroup instances to native Kotlin `String`, `Byte`, `Double`, `Int`, `Long`, `Short` and `Float` types.
-
-^ In order for a data type content to be “combinable”, we need its type constructor to be able to provide an instance of a Semigroup. Some data types examples on Arrow that offer exactly that would be: Option, NonEmptyList, ListK, SequenceK, SetK...
+^ There are instances of Semigroup defined for many types found in Arrow. For example, Int values are combined using addition by default but multiplication is also associative and forms another Semigroup.
+^ Basicaly any type that can be combinable can adhere to Semigroup.
 
 ---
 
@@ -104,7 +82,7 @@ with(Double.semigroup()){
 
 ```kotlin
 with(String.semigroup()){
-    "This is ".combine("functional ") + ("programming.")
+    "This is ".combine("functional ").combine("programming.")
 }
 //This is functional programming.
 ```
@@ -113,7 +91,7 @@ Additionaly `Semigroup` adds `+` syntax to all types for which a `Semigroup` ins
 
 ^ This is an example which explain the main characteristic about Semigroup´s combine method in a clear way.
 ^ We are applying it to a Double and a String in this case, but remember you can use it with many other types.
-^ Additionaly Semigroup adds + syntax (mark +) to all types for which a Semigroup instance exists
+^ Additionaly Semigroup adds + syntax to all types for which a Semigroup instance exists
 ^ With a semigroup, we gain the capability to combine, and that is the main value of it.
 
 ---
@@ -134,7 +112,7 @@ Arrow has tests in place for those laws so typeclasses can keep their integrity 
 
 Semigroup satisfies the following law:
 
-- __Associativity__: When adding or multiplying, it doesn't matter how we combine the group of numbers.
+- __Associativity__: When adding or multiplying, it doesn't matter how we combine the group of elements.
 
 ```kotlin
     (a.combine(b)).combine(c)
@@ -182,16 +160,14 @@ interface Monoid<A> : Semigroup<A> {
 
 # Monoid :: empty
 
-Having an __empty__ defined allows us to combine all the elements of an potentially empty collection of `T` for which a `Monoid <T>` is defined and as a result we would get a `T` element instead of an `Option <T>`, since we have a specific value to fall back to.
+The __empty__ method provides a default value to the `combineAll` method. That means that if we try to use `combineAll` but not giving any arguments, or try to combine an empty list, it will use `empty()` method to define the result, since we have a specific value to fall back to.
 
 ```kotlin
-with(String.monoid()){
-    listOf("Try", " ", "Λ", "", "R", "R", "O", "W").combineAll()
-}
-//Try ΛRROW
+Int.monoid().combineAll()
+//0
 ```
 
-^ And what is special about this empty method? The answer is that it allows us to combine all the elements of an hypothetical empty list of T for which a Monoid T is defined. As a result we would get a T element instead of an Option T, since we have a specific value to fall back to.
+^ The empty method provides a default value to the combineAll method. So, if using combineAll we are not receiving arguments, or try to combine an empty list, it will use empty method to define the result since we have a specific value to fall back to. In this case the default value would be 0.
 
 ---
 
@@ -241,7 +217,7 @@ with(ListK.foldable()) {
 //20
 ```
 
-^ This is also true if we define our own isntances. For example, we are going to use foldMap, which maps over values accumulating the results, using the available Monoid for the type mapped onto, and also provides a function which we can applies to that accumulated value (mark "it * 2"). We can see this in the example above where we are multiplying by two that accumulated value, as a result we would get twenty.
+^ This is also true if we define our own instances. For example, we are going to use foldMap, which maps over values accumulating the results, using the available Monoid for the type mapped onto, and also provides a function which we can apply to that accumulated value (mark "it * 2"). We can see this in the example above where we are multiplying by two that accumulated value, as a result, we would get twenty.
 
 ---
 
@@ -287,7 +263,7 @@ fun <A, B> monoidTuple(MA: Monoid<A>, MB: Monoid<B>): Monoid<Tuple2<A, B>> =
 # Monoid
 
 In this example, we see a function where the `foldMap` receives a Monoid `M` and a function that takes an element from the list and returns the type of the `Monoid`.
-The `foldMap` usses the `Monoid.empty` as base instance and uses the function `Tuple2.combine` for combining the base instance with the result of the fuction doing it recursively among every element in the list.
+The `foldMap` uses the `Monoid.empty` as base instance and uses the function `Tuple2.combine` for combining the base instance with the result of the function doing it recursively among every element in the list.
 This way we are able to combine both values in one pass!
 
 ```kotlin
@@ -308,6 +284,11 @@ with(ListK.foldable()) {
 
 ---
 
+# Closing sentence
+
+Both Type Classes, Semigroup and Monoid are really useful to combine, concat or join any type of combinable element.
+In this video, we have learned how to use the methods those Types Classes provide.
+We will learn more about other Type Classes like `Monad`, `Foldable` or `Applicative` in future videos.
 Thanks for watching!
 
 - Λrrow : [http://arrow-kt.io](http://arrow-kt.io)
