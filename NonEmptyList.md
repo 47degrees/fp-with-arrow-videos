@@ -49,7 +49,7 @@ nel.head // 1
 
 # NonEmptyList :: foldLeft
 
-Whe we fold with turn a __NonEmptyList< A >__ into __B__ by providing a __seed__ value and a __function__ that carries the state on each iteration over the elements of the list.
+When we fold over a __NonEmptyList__, we turn a __NonEmptyList< A >__ into __B__ by providing a __seed__ value and a __function__ that carries the state on each iteration over the elements of the list.
 
 ```kotlin
 fun sumNel(nel: NonEmptyList<Int>): Int = 
@@ -63,7 +63,7 @@ sumNel(NonEmptyList.of(1, 1, 1, 1))
 
 # NonEmptyList :: foldLeft
 
-The first argument is a function that addresses the __seed value__, this can be any object of any type which will then become the resulting typed value
+The first argument is a function that addresses the __seed value__, this can be any object of any type which will then become the resulting typed value.
 
 ```kotlin
 fun sumNel(nel: NonEmptyList<Int>): Int = 
@@ -91,7 +91,7 @@ sumNel(NonEmptyList.of(1, 1, 1, 1))
 
 # NonEmptyList :: map
 
-__map__ allows us to transform __A__ into __B__ in __NonEmptyList< A >__
+__map__ allows us to transform __A__ into __B__ in __NonEmptyList< A >__.
 
 ```kotlin
 NonEmptyList.of(1, 1, 1, 1).map { it + 1 }
@@ -102,7 +102,7 @@ NonEmptyList.of(1, 1, 1, 1).map { it + 1 }
 
 # NonEmptyList :: flatMap
 
-__flatMap__ allows us to compute over the contents of multiple __NonEmptyList< * >__ values 
+__flatMap__ allows us to compute over the contents of multiple __NonEmptyList< * >__ values.
 
 ```kotlin
 val nelOne: NonEmptyList<Int> = NonEmptyList.of(1)
@@ -140,7 +140,7 @@ NonEmptyList.monad().binding {
 
 # NonEmptyList :: Monad binding
 
-Monad binding in `NonEmptyList` and other collection related data type can be used as generators
+Monad binding in `NonEmptyList` and other collection related data types can be used as generators.
 
 ```kotlin
 NonEmptyList.monad().binding {
@@ -178,7 +178,7 @@ NonEmptyList.applicative().map(nelId, nelName, nelYear, { (id, name, year) ->
 
 # NonEmptyList :: Conclusion
 
-- NonEmptyList is __used to model list that guarantee at least one element__ 
+- NonEmptyList is __used to model list that guarantee at least one element__.
 - We can easily construct values of `NonEmptyList` with `NonEmptyList.of`
 - __foldLeft__, __map__, __flatMap__ and others are used to compute over the internal contents of an NonEmptyList value.
 - __NonEmptyList.monad().binding { ... } Comprehensions__ can be __used to imperatively compute__ over multiple NonEmptyList values in sequence.
@@ -188,7 +188,7 @@ NonEmptyList.applicative().map(nelId, nelName, nelYear, { (id, name, year) ->
 
 # NonEmptyList :: Conclusion
 
-- __All techniques demonstrated are also available to other data types__ such as `Try`, `Either`, `IO` and you can build adapters for any data types
+- __All techniques demonstrated are also available to other data types__ such as `Try`, `Either`, `IO` and you can build adapters for any data types.
 - We will learn more about other data types like `Try`, `Either`, `IO` and type classes that power these abstraction such as `Functor`, `Applicative` and `Monad` in other videos.
 - __Λrrow encourages a unified programming model__ in which you can solve problems cohesively in all contexts following Typed Functional Programming principles applied to the Kotlin Programming Language.
 
